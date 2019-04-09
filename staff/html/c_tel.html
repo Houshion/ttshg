@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="viewport" content="width=device-width,target-densitydpi=high-dpi,initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <meta name="format-detection" content="telephone=no, email=no">
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+    <meta http-equiv="Cache-Control" content="no-cache" />
+    <!--设置存缓-->
+    <!-- css -->
+    <link rel="stylesheet" href="../css/reset.css">
+    <link rel="stylesheet" href="../css/swiper.min.css">
+    <title>绑定手机</title>
+    <!-- 设置rem -->
+    <script type="text/javascript" src="../js/adaptive.js"></script>
+    <script>
+    window['adaptive'].desinWidth = 750;
+    window['adaptive'].baseFont = 28;
+    window['adaptive'].init();
+    </script>
+    <style>
+		body{overflow:hidden;}
+		.swiper-container {
+			width: 100%;
+			height: 3.8rem;
+		}
+
+		.swiper-slide {
+			background: url(../img/bg1.png) 100% 100%;
+		}
+		.cont{
+			margin: 0.45rem
+		}
+		.cont input{
+			line-height: 1.0rem;
+
+		}
+		.yanzheng{
+			padding: 0.15rem 0.2rem;
+			background: #e27e20;
+			border-radius: 0.08rem;
+			float: right;
+			color: #fff;
+			/*margin-top: 0.15rem;*/
+			border: none;
+			outline: none;
+			min-width: 1.8rem;
+		}
+		.login{
+			width: 1.8rem;
+			height: 1.8rem;
+			border-radius: 1.8rem;
+			margin :1rem auto;
+			display: block;
+		}
+		.aa{
+			display: none;
+		}
+		.flex_a{display: flex;align-items: center;}
+		.flex1{flex: 1;}
+    </style>
+</head>
+
+<body class="aa"> 
+    <img src="../img/login.png" class="login">
+    <div class=" cont">
+    	<div class="border-bottom"><input type="number" name="" placeholder="请输入手机号码" style="width: 100%;" id="tel"></div>
+    	<div class="border-bottom flex_a"><input type="number" name="" placeholder="请输入验证码" style="width: 70%;" id="yzm" class="flex1"><button class="yanzheng" >获取验证码</button></div>
+    </div>
+    <div class="row-5"></div>
+    <div class="btn">绑定手机号</div>
+</body>
+
+</html>
+<script src="../js/jquery-1.8.3.min.js"></script>
+<script src="../js/dlc.js" type="text/javascript" charset="utf-8"></script>
+<script>
+	$(function(){
+		$(".btn").click(function () {
+			var tel = $('#tel').val();
+			var yzm = $('#yzm').val();
+			if(tel == '') {
+				dlctipbox.show('请输入手机号码');
+			}else if(!(/^1[34578]\d{9}$/.test(tel))) {
+				dlctipbox.show('请输入正确的手机号码');
+			}else if(yzm == ''){
+				dlctipbox.show('请输入验证码');
+			}else {
+				/***********注册*****************/
+				dlc_request('Wxsite/WDuser/api',{api_name:'binding',mobile:tel,code:yzm},function(res){
+					console.log(res);
+					if(res.code==1){
+						window.location.href='c_shopAdmin.php';
+					}
+					dlctipbox.show(res.msg);
+				});
+			}
+		});
+		dlc_request('Wxsite/WDuser/api',{api_name:'checkLogin'},function(res){
+			console.log(res);
+			dlctipbox.show(res.msg);
+			if(res.msg == '您已绑定手机号!'){
+				window.location.href='c_shopAdmin.php'
+			}else{
+				$('.aa').show();
+			}
+		});
+		$(".yanzheng").click(function(){
+			var tel = $('#tel').val();
+			if(tel == '') {
+				dlctipbox.show('手机号码必须填写');
+			} else if(!(/^1[34578]\d{9}$/.test(tel))) {
+				dlctipbox.show( '请输入正确的手机号码');
+			} else {
+				var second = 60;
+				var t = setInterval(function() {
+					if(second <= 0) {
+						second = 0;
+						$(".yanzheng").text("重发验证码");
+						$(".yanzheng").attr("disabled", false).css('background','#e27e20');
+						clearInterval(t);
+					} else {
+						second--;
+						$(".yanzheng").attr("disabled", true);
+						$(".yanzheng").text(second + "秒后重发").css('background','#ccc');
+					}
+				}, 1000);
+
+				dlc_request('Wxsite/WDuser/api',{api_name:'send_code',mobile:$('#tel').val()},function(res){
+					console.log(res);
+					dlctipbox.show(res.msg);
+				});
+			}
+		});
+	})
+</script>

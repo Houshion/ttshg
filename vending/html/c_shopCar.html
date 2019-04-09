@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="viewport" content="width=device-width,target-densitydpi=high-dpi,initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <meta name="format-detection" content="telephone=no, email=no">
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+    <meta http-equiv="Cache-Control" content="no-cache" />
+    <!--设置存缓-->
+    <!-- css -->
+    <link rel="stylesheet" href="../css/reset.css">
+    <link rel="stylesheet" href="../css/swiper.min.css">
+    <title>购物车</title>
+    <!-- 设置rem -->
+    <script type="text/javascript" src="../js/adaptive.js"></script>
+    <script>
+    window['adaptive'].desinWidth = 750;
+    window['adaptive'].baseFont = 28;
+    window['adaptive'].init();
+    </script>
+    <style>
+    .foot {
+        display: flex;
+        width: 100%;
+        background: #fff;
+        align-items: center;
+        text-align: center;
+    }
+
+    .abs {
+        width: 0.32rem;
+        line-height: 0.32rem;
+        color: #fff;
+        background: #e27e20;
+        border-radius: 1.0rem;
+        text-align: center;
+        right: 9px;
+        top: -3px;
+        z-index: 999;
+    }
+
+    .img {
+        width: 1.11rem;
+        line-height: 1.11rem;
+        border-radius: 1.11rem;
+    }
+
+    .goPay span {
+        color: #fff;
+        height: 100%;
+        text-align: center;
+    }
+
+    .list {
+
+        justify-content: space-between;
+        color: #999
+    }
+
+    .list img {
+        width: 2.0rem;
+        height: 1.5rem;
+        margin-left: 0.20rem
+    }
+
+    .list p {
+        width: 0.45rem;
+        height: 0.45rem;
+        border: 1px solid #eee;
+        border-radius: 0.08rem;
+        text-align: center;
+        display: inline-block;
+    }
+
+    .list span {
+        width: 0.45rem;
+        text-align: center;
+        display: inline-block;
+    }
+
+    .zhezhaobox img {
+        width: 0.56rem;
+        margin-right: 0.4rem
+    }
+    </style>
+</head>
+
+<body class="bc-gray conTent">
+    <div class="flex1" style="overflow-y: scroll;">
+        <ul class="paddlr20 bc-fff list">
+        </ul>
+    </div>
+    <div class="foot border-top">
+        <div class="flex1 rel tc">
+            <label class="all">
+                <input type="checkbox" hidden="hidden"  name="">
+                <cite></cite>
+                <span class="margin-left-10">全选</span>
+            </label>
+        </div>
+        <div class="flex2">
+            <span>合计<i class="orange">￥20</i></span>
+        </div>
+        <div class="flex2 goPay bc-orange font32 tc" style="line-height: 1rem"><span>去结算</span></div>
+    </div>
+    <!-- //弹窗内容 -->
+    <div class="zhezhaobox" style="">
+        <div class=" bc-fff " style="  position: fixed;width: 100%;bottom: 0;">
+            <div class="height8 tc paddlr20 border-bottom">支付方式</div>
+            <label class="space_between padd20 border-bottom">
+                <div>
+                    <img src="../img/wx.png">
+                    <span>微信</span>
+                </div>
+                <div>
+                    <input type="radio" hidden="hidden" name="pay">
+                    <cite></cite>
+                </div>
+            </label>
+            <label class="space_between padd20 border-bottom">
+                <div>
+                    <img src="../img/ali.png">
+                    <span>微信</span>
+                </div>
+                <div>
+                    <input type="radio" hidden="hidden" name="pay">
+                    <cite></cite>
+                </div>
+            </label>
+            <div class="margin-top-20 tc paddlr20  blod orange font32">合计：￥<i>1000</i></div>
+            <div class="pay btn">确认支付</div>
+        </div>
+    </div>
+</body>
+
+</html>
+<script src="../js/jquery-1.8.3.min.js"></script>
+<script src="../js/whole.js"></script>
+<script src="../js/swiper.min.js"></script>
+<script src="../js/tooltipbox.js"></script>
+<script>
+
+$(".all").click(function() {
+    if ($(".all input").is(":checked")) {
+
+        $(".list input").prop("checked", true);
+
+    } else {
+
+        $(".list input").prop("checked", false);
+
+    }
+
+
+})
+// 加号
+$(".list").on('click', '.add', function() {
+    var t = $(this).prev();
+    var stockCont = $(this).parent().siblings().find('em')
+    var stock = $(this).parent().attr("title")
+    console.log(t[0].innerHTML) //取到数量
+    t.text(parseInt(t[0].innerHTML) + 1); //parseInt()
+    // 库存减去1
+    $(this).parent().attr("title", stock - 1)
+    stockCont.text(stock - 1)
+
+})
+// 减号
+$(".list").on('click', '.minus', function() {
+    var t = $(this).next();
+    var stockCont = $(this).parent().siblings().find('em')
+    var stock = $(this).parent().attr("title")
+    t.text(parseInt(t[0].innerHTML) - 1);
+
+
+    if (t.text() < 0) {
+        t.text(0) //当数量小于0的时候让最小值等于0
+        stockCont.text(stock)
+    } else {
+        // 库存+1
+        $(this).parent().attr("title", stock * 1 + 1)
+        stockCont.text(stock * 1 + 1)
+    }
+    //heji();
+})
+var str = ''
+for (var i = 0; i < 5; i++) {
+    str += '<li class="border-bottom ">' +
+        '<label class="space_between"> ' +
+        '<div class="paddtb20" style="display: flex;align-items: center;">' +
+        ' <input type="checkbox" hidden name="">' +
+        '<cite class="margin-left-20"></cite> ' +
+        '<img src="../img/bg1.png" class="">' +
+        '<div class=" space_between_col margin-left-20">' +
+        '<dl>' +
+        '<dt class="font32 name" >鱼香肉丝</dt>' +
+        '<dd class="c999 ">库存：<em class=" stock">56</em></dd>' +
+        '</dl>' +
+        '<div class="row-3"></div><span class="orange ">￥<i class="price">70</i>.00</span>' +
+        '</div>' +
+        '</div>' +
+        '<div title="56">' +
+        '<p class="minus">-</p>' +
+        '<span>0</span>' +
+        '<p class="add" >+</p>' +
+        '</div>' +
+        '</li></label>'
+}
+$(".list").html(str)
+
+$(".goPay").click(function() {
+    showOverlay()
+})
+
+function heji() {
+    $(".gwcar").each(function() { //循环整个购物车
+        var oprice = 0; //商品总价
+        $(this).find(".glist").each(function() { //循环购物车里的每个商品，this值得是这个购物车
+            if ($(this).find(".btn").hasClass("option1") == true) { //
+                var num = $(this).find(".shuliang").val(); //取到数量，this指的还是购物车的商品一个
+                var danjia = $(this).find(".danjia").text();
+                var xiaoji = num * danjia; //商品小计
+                oprice += xiaoji;
+                $(".zongjia").html(oprice);
+            };
+        });
+    });
+};
+</script>

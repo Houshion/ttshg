@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="en">
+
+    <head>
+        <title>设备</title>
+        <meta charset="UTF-8">
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+        <meta name="viewport" content="width=device-width,target-densitydpi=high-dpi,initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+        <meta name="format-detection" content="telephone=no, email=no">
+        <meta name="apple-mobile-web-app-capable" content="yes" />
+        <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+        <meta http-equiv="Cache-Control" content="no-cache" />
+        <link rel="stylesheet" href="../css/o_base.css">
+        <link rel="stylesheet" href="../css/o_style.css">
+        <link rel="stylesheet" href="../css/layui.css">
+        <link rel="stylesheet" href="../css/layer.css">
+    </head>
+    <body>
+        <div id="replenishment">
+            <div class="replenishmentMessage flex flexWrap pd-15 mg-b-10">
+
+            </div>
+            <div class="replenishmentEquipment flex mg-b-10 pd-15">
+                <div class="wd-10">
+                    <img src="../img/i_jilu.png" alt="">
+                </div>
+                <div class="wd-75 ta-left type">设备异常记录</div>
+                <div class="wd-15 box">
+                    <img src="../img/i_right.png" alt="" class="right">
+                </div>
+            </div>
+            <div class="waresList mg-b-10">
+                <div class="title flex pd-15">
+                    <div class="wd-10">
+                        <img src="../img/i_shangpin.png" alt="">
+                    </div>
+                    <div class="wd-75 ta-left type">商品明细</div>
+                </div>
+                <div id="list" class="pd-l-15 pd-r-15">
+                    
+                </div>
+            </div>
+            <div class="foot flex">
+                <div class="wd-50 box plus">去补货并开锁</div>
+                <div class="wd-50 box add">添加商品</div>
+            </div>
+        </div>
+    </body>
+    <script src="../js/o_base.js"></script>
+    <script src="../js/jquery-1.11.1.min.js"></script>
+    <script src="../js/layui.all.js"></script>
+    <script src="../js/layer.js"></script>
+    <script src="../js/dlc.js"></script>
+    <script>
+        $(function () {
+// history.back()
+
+            if(!isNull(getUrlParam('macno'))){
+                var macno = getUrlParam('macno');
+                setItem("macNo",getUrlParam('macno'));
+            }else{
+                var macno = getItem("macNo")
+            }
+
+            console.log(macno)
+
+            getDeviceMessage(macno);
+
+            $(".replenishmentEquipment").on("click",function () {
+                goTo('./o_message.html',"macno="+macno);
+            });
+
+            $(".foot .plus").on("click",function () {
+
+                layer.open({
+                    content: '是否开锁',
+                    btn: ['确认', '取消'],
+                    yes: function(index){
+
+                        // goTo('./o_replenishment.html')//测试跳过开锁
+
+                        var param = {api_name: "unlocking",macno: macno}
+                        ajaxPost(param,"Lzjrevenue/api",function (res) {
+                            if(res.code != 1){
+                                layer.open({
+                                    content: res.msg,
+                                    skin: 'msg',
+                                    time: 2 //2秒后自动关闭
+                                });
+                            }else{
+                                if(res.data.status == 0){
+                                    layer.open({
+                                        content: res.msg,
+                                        skin: 'msg',
+                                        time: 2 //2秒后自动关闭
+                                    });
+                                }else{
+                                    goTo('./o_replenishment.html')
+                                }
+                            }
+                        },function (error) {
+                            layer.open({
+                                content: error,
+                                skin: 'msg',
+                                time: 2 //2秒后自动关闭
+                            });
+                        })
+                    }
+                });
+                
+            })
+
+            $(".foot .add").on("click",function () {
+                goTo('./o_append.html');
+            })
+
+            $("#list").on("click",".list img",function () {
+
+                var _this = $(this);
+                layer.open({
+                    content: '确认删除该商品？',
+                    btn: ['确认', '取消'],
+                    yes: function(index){
+                        
+                        var device_goods_id = _this.parent().parent().data('dgid');
+
+                        var param = {api_name: 'goodsDel',device_goods_id: device_goods_id}
+
+                        ajaxPost(param,"AddGoods/api",function (res) {
+
+                            if(res.code == 1){
+                                _this.parent().parent().remove();
+                            }
+                            layer.open({
+                                content: res.msg,
+                                skin: 'msg',
+                                time: 2 //2秒后自动关闭
+                            });
+                        },function (error) {
+                            layer.open({
+                                content: error,
+                                skin: 'msg',
+                                time: 2 //2秒后自动关闭
+                            });
+                        });
+
+
+                        
+                    }
+                });
+            });
+            
+
+            function getDeviceMessage(macno){
+
+                console.log(macno)
+
+                var param = {api_name:"deviceDetail",macno:macno};//暂时写死数据
+                var url = "AddGoods/api";
+
+                ajaxPost(param, url, function (datas){
+					if(datas.code == -1){
+                        //alert(1)
+                        layer.open({
+                            content: datas.msg,
+                            skin: 'msg',
+                            time: 2 //2秒后自动关闭
+                        });
+                        setTimeout(() => {
+                            history.go(-2)
+                        },2000);
+                        
+					}
+                    var data = datas.data;
+                    var dataDevice = data.device;
+                    var strDevice = '<div class="deviceName wd-100">'+
+                                        '<label class="col_gray">设备名称：</label>'+
+                                        '<span>'+dataDevice.title+'</span>'+
+                                    '</div>'+
+                                    '<div class="deviceModel wd-50 pd-t-15 pd-b-15">'+
+                                        '<label class="col_gray">设备型号：</label>'+
+                                        '<span>'+dataDevice.model+'</span>'+
+                                    '</div>'+
+                                    '<div class="deviceNO wd-50 pd-t-15 pd-b-15">'+
+                                        '<label class="col_gray">设备编号：</label>'+
+                                        '<span>'+dataDevice.macno+'</span>'+
+                                    '</div>'+
+                                    '<div class="deviceAddress wd-100">'+
+                                        '<label class="col_gray">设备地址：</label>'+
+                                        '<span>'+dataDevice.address+'</span>'+
+                                    '</div>';
+                    
+                    setItem("deviceId", dataDevice.device_id);
+
+                    $(".replenishmentMessage").append(strDevice);
+
+                    var dataGoods = data.goods;
+                    if(dataGoods.length == 0){
+                        $("#list").prepend("<div class='ta-center'>..暂无数据..</div>");
+                        return false;
+                    }
+                    var strGoods = "";
+                    for(var i = 0; i < dataGoods.length; i++){
+                        strGoods += '<div class="list flex border-b pd-t-15 pd-b-15" data-dgid="'+dataGoods[i].device_goods_id+'">'+
+                                        '<div class="wd-35">'+
+                                            '<label>'+dataGoods[i].goods_name+'</label>'+
+                                            '<span class="col_gray">('+dataGoods[i].aisle_num+')</span>'+
+                                        '</div>'+
+                                        '<div class="wd-55">'+
+                                            '<label class="col_gray">剩余量：</label>'+
+                                            '<span class="col_gray">'+dataGoods[i].inventory+'</span>'+
+                                        '</div>'+
+                                        '<div class="wd-10">'+
+                                            '<img src="../img/i_shanchu.png" alt="">'+
+                                        '</div>'+
+                                    '</div>';
+                    }
+                    $("#list").prepend(strGoods);
+                },function (error){
+                    layer.open({
+                        content: error,
+                        skin: 'msg',
+                        time: 2 //2秒后自动关闭
+                    });
+                });
+
+            }
+        })
+    </script>
+</html>

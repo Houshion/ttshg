@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+
+    <head>
+        <title>设备异常记录</title>
+        <meta charset="UTF-8">
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+        <meta name="viewport" content="width=device-width,target-densitydpi=high-dpi,initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+        <meta name="format-detection" content="telephone=no, email=no">
+        <meta name="apple-mobile-web-app-capable" content="yes" />
+        <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+        <meta http-equiv="Cache-Control" content="no-cache" />
+        <link rel="stylesheet" href="../css/o_base.css">
+        <link rel="stylesheet" href="../css/o_style.css">
+        <link rel="stylesheet" href="../css/layui.css">
+        <link rel="stylesheet" href="../css/layer.css">
+    </head>
+    <body>
+        <div id="abnormal">
+            <div class="mg-15">
+                <button class="btn wd-100 mg-t-20 radius5 submit">添加记录</button>
+            </div>
+        </div>
+    </body>
+    <script src="../js/o_base.js"></script>
+    <script src="../js/jquery-1.11.1.min.js"></script>
+    <script src="../js/layui.all.js"></script>
+    <script src="../js/layer.js"></script>
+    <script>
+        $(function () {
+
+            $("#abnormal").on("click",".list", function () {
+                var id = $(this).data("id");
+                goTo("./o_abnormalDetail.html","id="+id);
+            })
+
+            $(".submit").on("click", function () {
+                goTo("./o_abnormal.html")
+            });
+
+            getList();
+
+            function getList(){
+
+                var param = {api_name: "unusualRecord"};
+                var url = "Device/api";
+
+                ajaxPost(param, url, function (datas) {
+                    var data = datas.data;
+                    if(data.length == 0){
+                        $("#abnormal").prepend("<div class='ta-center'>..暂无数据..</div>");
+                    }
+                    var str = '';
+                    for(var i = 0; i < data.length; i++){
+                        str += '<div class="list mg-b-10" data-id="'+data[i].unusual_id+'">'+
+                                    '<div class="title flex border-b pd-15 col_gray">'+
+                                        '<div>'+data[i].username+'</div>'+
+                                        '<div>'+data[i].ctime+'</div>'+
+                                    '</div>'+
+                                    '<div class="content pd-15 font15">'+data[i].reason+'</div>'+
+                                '</div>';
+                    }
+                    $("#abnormal").prepend(str);
+                },function (error){
+                    layer.open({
+                        content: error,
+                        skin: 'msg',
+                        time: 2 //2秒后自动关闭
+                    });
+                })
+            }
+
+        })
+    </script>
+</html>

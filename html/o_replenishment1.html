@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>补货</title>
+    <meta charset="UTF-8">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="viewport" content="width=device-width,target-densitydpi=high-dpi,initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <meta name="format-detection" content="telephone=no, email=no">
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+    <meta http-equiv="Cache-Control" content="no-cache" />
+    <link rel="stylesheet" href="../css/o_base.css">
+    <link rel="stylesheet" href="../css/o_style.css">
+    <link rel="stylesheet" href="../css/layui.css">
+    <link rel="stylesheet" href="../css/layer.css">
+    <style>
+        .input input {
+            text-align: center
+        }
+    </style>
+</head>
+
+<body>
+    <div id="appendTitle" class="mg-b-10">
+        <div class="title flex pd-15">
+            <div class="wd-10">
+                <img src="../img/i_shangpin.png" alt="">
+            </div>
+            <div class="wd-75 ta-left type">商品明细</div>
+        </div>
+        <div id="list" class="pd-l-15 pd-r-15">
+
+        </div>
+        <div class="mg-15">
+            <button class="btn wd-100 mg-t-20 radius5 confirm">确定</button>
+        </div>
+    </div>
+</body>
+<script src="../js/o_base.js"></script>
+<script src="../js/jquery-1.11.1.min.js"></script>
+<script src="../js/layui.all.js"></script>
+<script src="../js/layer.js"></script>
+<script>
+    $(function () {
+
+        getList();
+
+        $(".confirm").on("click", function () {
+
+
+            var goods = []
+
+            $(".list").each(function () {
+                var num = $(this).find("input").val();
+                var _this = $(this);
+
+                // if (num > 0) {
+                goods.push({
+                    "device_goods_id": _this.data("did"),
+                    'goods_id': _this.data("gid"),
+                    'num': num
+                });
+                // }
+            });
+
+            console.log(JSON.stringify(goods))
+
+            var param = {
+                api_name: 'confirmAddGoods',
+                goods: goods
+            }
+            var url = 'AddGoods/api';
+
+            ajaxPost1(param, url, function (data) {
+                layer.open({
+                    content: data.msg,
+                    skin: 'msg',
+                    time: 2 //2秒后自动关闭
+                });
+                setTimeout(function () {
+                    back();
+                }, 2000);
+            }, function (error) {
+                layer.open({
+                    content: error,
+                    skin: 'msg',
+                    time: 2 //2秒后自动关闭
+                });
+            });
+        })
+
+        // $("#list").on("click", ".plus", function () {
+
+        //     var numDom = $(this).siblings(".input").children();
+        //     var num = numDom.val();
+
+        //     num = parseInt(num) + 1;
+        //     numDom.val(num);
+
+        // });
+
+        // $("#list").on("click", ".reduce", function () {
+
+        //     var _this = $(this);
+        //     var numDom = _this.siblings(".input").children();
+        //     var num = numDom.val();
+
+        //     num = parseInt(num) - 1;
+
+        //     // if (num >= 0) {
+        //     numDom.val(num);
+        //     // }
+
+        // });
+
+        function getList() {
+
+            var param = {
+                api_name: "deviceGoods",
+                device_id: getItem("deviceId")
+            };
+            var url = "AddGoods/api";
+
+            ajaxPost1(param, url, function (datas) {
+
+                var data = datas.data;
+                if (data.length == 0) {
+                    $("#list").prepend("<div class='ta-center'>..暂无数据..</div>");
+                    return false;
+                }
+                var str = "";
+
+                for (var i = 0; i < data.length; i++) {
+                    str += '<div class="list flex border-t pd-t-15 pd-b-15" data-did="' + data[i].device_goods_id +
+                        '" data-gid="' + data[i].goods_id + '">' +
+                        '<div class="wd-35">' +
+                        '<label>' + data[i].goods_name + '</label>' +
+                        '<span class="col_gray">（' + data[i].aisle_num + '）</span>' +
+                        '</div>' +
+                        '<div class="wd-30">' +
+                        '<label class="col_gray">剩余量：</label>' +
+                        '<span class="col_gray syl">' + data[i].inventory + '</span>' +
+                        '</div>' +
+                        '<div class="wd-25">' +
+                        '<div class="NumBox flex radius5 box">' +
+                        // '<div class="reduce wd-33">-</div>' +
+                        '<div class="reduce wd-33" onclick="reduce(this,' + data[i].inventory +
+                        ')">-</div>' +
+                        '<div class="input wd-33">' +
+                        '<input type="number" value="0" />' +
+                        '</div>' +
+                        // '<div class="plus wd-33">+</div>' +
+                        '<div class="plus wd-33" onclick="plus(this,' + data[i].inventory +
+                        ')">+</div>' +
+                        '</div>' +
+                        '</div>' +
+                        '</div>';
+                }
+
+                $("#list").prepend(str)
+
+            }, function (error) {
+                layer.open({
+                    content: error,
+                    skin: 'msg',
+                    time: 2 //2秒后自动关闭
+                });
+            });
+
+
+        }
+    })
+
+    // var number;
+
+    function reduce(tag, tagNum) {
+        var _this = $(tag);
+        var numDom = _this.siblings(".input").children();
+        var tagNumber = _this.parents(".list").find(".syl");
+        var num = numDom.val();
+
+        if (tagNum > Math.abs(num)) {
+            num = parseInt(num) - 1;
+            numDom.val(num);
+            tagNumber.text(parseInt(tagNumber.text()) - 1)
+        }
+    }
+
+    function plus(tag, tagNum) {
+        var _this = $(tag);
+        var numDom = _this.siblings(".input").children();
+        var tagNumber = _this.parents(".list").find(".syl");
+        var num = numDom.val();
+
+        num = parseInt(num) + 1;
+        numDom.val(num);
+        tagNumber.text(parseInt(tagNumber.text()) + 1)
+    }
+</script>
+
+</html>

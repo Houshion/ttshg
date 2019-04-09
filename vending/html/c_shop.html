@@ -1,0 +1,661 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="viewport" content="width=device-width,target-densitydpi=high-dpi,initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <meta name="format-detection" content="telephone=no, email=no">
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+    <meta http-equiv="Cache-Control" content="no-cache" />
+    <!--设置存缓-->
+    <!-- css -->
+    <link rel="stylesheet" href="../css/reset.css">
+    <link rel="stylesheet" href="../css/swiper.min.css">
+    <link rel="stylesheet" href="../css/jerry.css"/>
+    <title>自助售货机</title>
+    <!-- 设置rem -->
+    <script type="text/javascript" src="../js/adaptive.js"></script>
+    <script>
+    window['adaptive'].desinWidth = 750;
+    window['adaptive'].baseFont = 28;
+    window['adaptive'].init();
+    </script>
+    <style>
+    .swiper-container {
+        width: 100%;
+        height: 3.8rem;
+    }
+
+    .swiper-slide img{
+        height: 3.8rem;
+        width: 100%;
+    }
+
+    .foot {
+
+        display: flex;
+        width: 100%;
+        position: fixed;
+        bottom: 0;
+        background: #fff;
+    }
+
+    .abs {
+        width: 0.32rem;
+        line-height: 0.32rem;
+        color: #fff;
+        background: #e27e20;
+        border-radius: 1.0rem;
+        text-align: center;
+        right: 9px;
+        top: -3px;
+        z-index: 999;
+    }
+
+    .img {
+        width: 1.11rem;
+        line-height: 1.11rem;
+        border-radius: 1.11rem;
+    }
+
+    .goPay span {
+        color: #fff;
+        height: 100%;
+        text-align: center;
+    }
+
+    .list {
+
+        justify-content: space-between;
+        color: #999
+    }
+
+    .list img {
+        width: 2.0rem;
+        height: 1.5rem
+    }
+
+    .list p {
+        width: 0.5rem;
+        height: 0.5rem;
+        border: 1px solid #eee;
+        border-radius: 0.08rem;
+        text-align: center;
+        display: inline-block;
+        font-size: .4rem;
+        line-height: .5rem;
+    }
+
+    .list span {
+        width: 0.45rem;
+        text-align: center;
+        display: inline-block;
+    }
+
+    .zhezhaobox img {
+        width: 0.56rem;
+        margin-right: 0.4rem
+    }
+    .zhezhaobox{background: transparent;height: auto;}
+    .order {
+        width: 1.5rem;
+        position: fixed;
+        bottom: 1.8rem;
+        right: 0.1rem;
+    }
+    .flex_a{display: flex;align-items: center;}
+    .flex_aj{display: flex;align-items: center;justify-content: center;}
+    .order{bottom: 1.2rem;}
+    #jf{overflow: hidden;text-overflow:ellipsis;white-space: nowrap;}
+    .tip{background: rgba(0,0,0,.5);display:flex;align-items:center;font-size:.28rem;position: absolute;bottom: 0;left: 0;width: 100%;z-index: 1000;line-height: .6rem;padding: 0 .24rem;color: #fff;}
+    </style>
+</head>
+<body class="conTent">
+    <div class="swiper-container">
+        <div class="swiper-wrapper">
+            <div class="swiper-slide"><img src="../img/bg1.png"/></div>
+            <div class="swiper-slide"><img src="../img/bg1.png"/></div>
+            <div class="swiper-slide"><img src="../img/bg1.png"/></div>
+        </div>
+        <!-- 如果需要分页器 -->
+        <!--<div class="swiper-pagination"></div>-->
+        <div class="tip">
+            <img src="../img/bell.png" style="width:.3rem;"/>
+            <div style="flex: 1;margin-left: .2rem;display: flex;align-items: center;">
+                <marquee class="pull-left months" direction="right" behavior="scroll" scrollamount="1" scrolldelay="0" loop="-1" style="width: 100%;">
+                    <div id="tip_text">暂无公告...</div>
+                </marquee>
+            </div>
+        </div>
+    </div>
+    <div class=" conTent">
+        <ul class="paddlr20 bc-fff list" style="padding-bottom: 1rem">
+            <!--<li class="border-bottom space_between">-->
+                <!--<div class="paddtb20" style="display: flex;">-->
+                    <!--<img src="../img/bg1.png" class="">-->
+                    <!--<div class=" space_between_col margin-left-20">-->
+                        <!--<dl>-->
+                            <!--<dt class="font32 name" >鱼香肉丝</dt>-->
+                            <!--<dd class="c999 ">库存：<i class="price">56</i></dd>-->
+                        <!--</dl>-->
+                        <!--<span class="orange ">￥<i class="stock">70</i>.00</span>-->
+                    <!--</div>-->
+                <!--</div>-->
+                <!--<div>-->
+                    <!--<p class="minus">-</p>-->
+                    <!--<span>0</span>-->
+                    <!--<p class="add">+</p>-->
+                <!--</div>-->
+            <!--</li>-->
+        </ul>
+    </div>
+    <div class="foot border-top">
+        <div class="flex1 rel tc shopCar" style="top: -9px;">
+            <img src="../img/shopCar.png" class="img">
+            <span class="abs" style="font-size: 12px;" id="total_num">0</span>
+        </div>
+        <div class="flex2 margin-left-10 margin-top-20">
+            <dl class="c999">
+                <dt class="font32">共<i class="orange">￥<span id="total_price">0</span></i></dt>
+                <dd id="jf">积分：0（打折）</dd>
+            </dl>
+        </div>
+        <div class="flex2 goPay bc-orange font32 tc" style="line-height: 1rem"><span>去结算</span></div>
+    </div>
+    <!--核对订单-->
+    <section class="cart_order">
+        <div style="padding: 0 .24rem;background: #f5f5f5;display: flex;align-items: center;justify-content: flex-end">
+            <span style="height: .8rem;display: flex;align-items: center;" id="empty_cart">
+                <img src="../img/delect.png" style="width: .28rem;"/>
+                <span class="margin-left-10 c999" style="font-size: .28rem;">清空购物车</span>
+            </span>
+        </div>
+        <ul class="cart_list">
+            <!--<li>-->
+                <!--<span class="c_name">酸菜牛肉面</span>-->
+                <!--<span class="c_price">￥88</span>-->
+                <!--<span class="c_num">4</span>-->
+            <!--</li>-->
+        </ul>
+    </section>
+    <!-- //弹窗内容 -->
+    <div class="zhezhaobox" style="  ">
+        <div class=" bc-fff " style="  position: fixed;width: 100%;bottom: 0;" id="pay_method">
+            <div class="height8 tc paddlr20 border-bottom">支付方式</div>
+            <label class="space_between padd20 border-bottom">
+                <div>
+                    <img src="../img/wx.png">
+                    <span>微信</span>
+                </div>
+                <div>
+                    <input type="radio" hidden="hidden" name="pay" value="1">
+                    <cite></cite>
+                </div>
+            </label>
+            <label class="space_between padd20 border-bottom">
+                <div>
+                    <img src="../img/ali.png">
+                    <span>支付宝</span>
+                </div>
+                <div>
+                    <input type="radio" hidden="hidden" name="pay" value="2">
+                    <cite></cite>
+                </div>
+            </label>
+            <div class="margin-top-20 tc paddlr20  blod orange font32">合计：￥<i id="account"></i></div>
+            <div class="pay btn" id="pay">确认支付</div>
+        </div>
+    </div>
+    <img src="../img/order.png" class="order" id="order" style="z-index: 1;">
+    <div id="alipayForm" style="display:none"></div>
+</body>
+</html>
+<script src="../js/jquery-1.8.3.min.js"></script>
+<script src="../js/swiper.min.js"></script>
+<script src="../js/jquery.fly.min.js"></script>
+<script src="../js/dlc.js"></script>
+<script src="../js/Tdrag.min.js"></script>
+<script src="../../../ap.js"></script>
+<script>
+        var cart = [];
+        var zhe_kou = 1;
+        //获取广告图
+        dlc_request('/Wxsite/MylGoods/api',{'api_name':'logo'},function(res){
+            console.log(res);
+            //alert(JSON.stringify(res));
+            if(res.code==1){
+                var tip_text = res.data.title;
+                var pics = res.data.pic;
+                var str = '';
+                for(var i in pics){
+                    str+='<div class="swiper-slide"><img src="'+pics[i]+'"/></div>';
+                }
+                if(str){
+                    $('.swiper-wrapper').html(str);
+                }else{
+                    $('.swiper-wrapper').html('<div class="swiper-slide"><img src="../img/bg1.png"/></div>');
+                }
+                $('#tip_text').text(tip_text);
+                var mySwiper = new Swiper('.swiper-container', {
+                    autoplay: 5000, //可选选项，自动滑动
+                    pagination: '.swiper-pagination',
+                    paginationType: 'custom',
+                    autoplayDisableOnInteraction: false
+                });
+            }else{
+                dlctipbox.show('广告图获取失败');
+            }
+        });
+        $(".order").click(function() {
+           // window.location.href = 'c_order.html'
+           if(cart.length>0){
+               if(confirm('您的购物车有未付款商品,是否保存')){
+                   console.log('保存');
+                   var order_date = '';
+                   for(var i in cart){
+                       order_date+=cart[i].device+':'+cart[i].goods_id+':'+cart[i].num+':'+cart[i].device_goods_id+',';
+                   }
+                   order_date = order_date.slice(0,order_date.length-1);
+                   console.log(order_date);
+                   dlc_request('/Wxsite/MylGoods/api',{'api_name':'updateSoppingTrolley','order_date':order_date},function(res){
+                        console.log(res);
+                        dlctipbox.show(res.msg);
+                        setTimeout(function(){
+                            window.location.href = 'c_order.html';
+                        },1000);
+                   });
+               }else{
+                   window.location.href = 'c_order.html';
+               }
+           }else{
+               window.location.href = 'c_order.html';
+           }
+        });
+        //获取购物车列表
+        init_cart_list();
+        function init_cart_list(){
+            dlc_request('/Wxsite/MylGoods/api',{'api_name':'shoppingTrolley','macno':getUrlParam('macno'),'page':1,'pagesize':9999},function(res){
+               console.log(res);
+               if(res.code==1){
+                   var res =res.data;
+                   var str='';
+                   var total_num = 0;
+                   var total_price = 0;
+                   for(var i in res){
+                       cart.push({goods_id:res[i].goods_id,num:res[i].goods_num,price:res[i].goods_price,name:res[i].goods_name,device:res[i].facility_id,device_goods_id:res[i].device_goods_id});
+                       str+='<li>'+
+                               '<span class="c_name">'+res[i].goods_name+'</span>'+
+                               '<span class="c_price">￥'+res[i].goods_price+'</span>'+
+                               '<span class="c_num">'+res[i].goods_num+'</span>'+
+                               '</li>';
+                       total_num+=res[i].goods_num*1;
+                       total_price+=res[i].goods_price*res[i].goods_num;
+                   }
+                   $('.cart_list').html(str);
+                   $('#total_price').html(total_price);
+                   $('#total_num').html(total_num);
+               }
+            });
+        }
+        $(".shopCar").click(function() {
+            //window.location.href = 'c_shopCar.html';
+            if(cart.length==0){
+                dlctipbox.show('请添加商品');
+            }else{
+                $('.cart_order').toggleClass('active');
+                if($('.cart_order').hasClass('active')){
+                    showMask();
+                }else{
+                    hideMask();
+                }
+            }
+        });
+        $('body').on('click','.mask,#empty_cart',function(){
+            $('.cart_order').removeClass('active');
+            $('.mask').remove();
+        });
+        $('#empty_cart').click(function(){
+            var order_date = '';
+            for(var i in cart){
+                order_date+=cart[i].device+':'+cart[i].goods_id+':'+0+':'+cart[i].device_goods_id+',';
+            }
+            order_date = order_date.slice(0,order_date.length-1);
+            if(confirm('确定要清空购物车吗？')){
+                dlc_request('/Wxsite/MylGoods/api',{'api_name':'updateSoppingTrolley','order_date':order_date},function(res){
+                    console.log(res);
+                    if(res.code==1){
+                        dlctipbox.show('购物车已清空');
+                        cart=[];
+                        $('#total_price').text(0);
+                        $('#total_num').text(0);
+                        $('.goods_num').text(0);
+                    }else{
+                        dlctipbox.show('操作失败');
+                    }
+                });
+            }
+        });
+        // 加号
+        $(".list").on('click', '.add', function() {
+            var t = $(this).prev();
+            //console.log(t[0].innerHTML); //取到数量
+            var num = parseInt(t[0].innerHTML) + 1;
+            t.text(num);
+            var parents_li = $(this).parents('li');
+            console.log(parents_li.data('device_goods_id'));
+            cart_fresh(parents_li.data('id'),num,parents_li.find('.price').text(),parents_li.find('.name').text(),parents_li.data('device'),parents_li.data('device_goods_id'));
+            //加入购物车动画
+            $('<div class="minBox" style="background: #e27e20;width: 0.3rem;height:.3rem;border-radius:50%;z-index: 100000"></div>').fly({
+                start: {
+                    left: event.pageX, //开始位置（必填）
+                    top: event.pageY //开始位置（必填）
+                },
+                end: {
+                    left: $('.shopCar').offset().left + 30, //结束位置（必填）
+                    top: $('.shopCar').offset().top + 10, //结束位置（必填）
+                    width: 10, //结束时宽度
+                    height: 10 //结束时高度
+                },
+                onEnd: function () { //结束回调
+                    this.destroy(); //移除dom
+                }
+            });
+        });
+        // 减号
+        $(".list").on('click', '.minus', function() {
+            var t = $(this).next();
+            var num = parseInt(t[0].innerHTML) - 1;
+            t.text(num);
+            if(num>-1){
+                $('<div class="minBox" style="background: #e27e20;width: 0.3rem;height:.3rem;border-radius:50%;z-index: 100000"></div>').fly({
+                    start: {
+                        left: $('.shopCar').offset().left + 30, //开始位置（必填）
+                        top: $('.shopCar').offset().top + 10, //开始位置（必填）
+                    },
+                    end: {
+                        left: $('.shopCar').offset().left -20, //结束位置（必填）
+                        top: $('.shopCar').offset().top - 20, //结束位置（必填）
+                        width: 10, //结束时宽度
+                        height: 10 //结束时高度
+                    },
+                    onEnd: function () { //结束回调
+                        this.destroy(); //移除dom
+                    }
+                });
+            }
+            //当数量小于0的时候让最小值等于0
+            if (parseInt(t.text()) < 0) {
+                t.text(0);
+                num =0;
+            };
+            var parents_li = $(this).parents('li');
+            cart_fresh(parents_li.data('id'),num,parents_li.find('.price').text(),parents_li.find('.name').text(),parents_li.data('device'),parents_li.data('device_goods_id'));
+            //购物车操作减动画
+        });
+        //获取商品列表
+        dlctipbox.loading('请稍后...');
+        dlc_request('/Wxsite/MylGoods/api',{'api_name':'commodityList','macno':getUrlParam('macno'),'page':1,'size':9999},function(res){
+            console.log(res);
+            dlctipbox.clear();
+            if(res.code == 1){
+                var facility_id = res.data.facility.facility_id;
+                var goods = res.data.list;//商品列表
+                var discount = res.data.discount;//我的积分和折扣
+                zhe_kou = !isNaN(discount.discount)?discount.discount:1;
+                console.log(zhe_kou);
+                $('#jf').text('积分：'+discount.integral+'（'+(!isNaN(discount.discount)?'打'+discount.discount+'折':discount.discount)+'）');
+                var str = '';
+                for(var i in goods){
+                    str+='<li class="border-bottom space_between goods_item" data-id="'+goods[i].goods_id+'" data-device_goods_id="'+goods[i].device_goods_id+'" data-device="'+facility_id+'">'+
+                            '<div class="paddtb20" style="display: flex;">'+
+                            '<img src="'+goods[i].img+'">'+
+                            '<div class=" space_between_col margin-left-20">'+
+                            '<dl>'+
+                            '<dt class="font32 name" >'+goods[i].name+'</dt>'+
+                            '<dd class="c999 ">库存：<i class="inventory">'+goods[i].inventory+'</i></dd>'+
+                    '</dl>'+
+                    '<span class="orange ">￥<i class="stock price">'+goods[i].price+'</i></span>'+
+                    '</div>'+
+                    '</div>'+
+                    '<div class="flex_a">'+
+                    '<p class="minus flex_aj" style="display: flex;">-</p>'+
+                            '<span class="goods_num">'+goods[i].count+'</span>'+
+                            '<p class="add flex_aj" style="display: flex;">+</p>'+
+                            '</div>'+
+                            '</li>';
+                }
+                if(str){
+                    $('.list').html(str);
+                }else{
+                    $('.list').html(emptyTip('暂无数据'));
+                }
+            }else{
+                dlctipbox.show(res.msg);
+            }
+        });
+        //计算合计价格
+//        function account(){
+//            var total = 0;
+//            $('.goods_item').each(function(){
+//                total+= $(this).find('.goods_num').text()*$(this).find('.price').text();
+//            });
+//            console.log(total);
+//            $('#total_price').text(total);
+//        }
+        $(".goPay").click(function() {
+            if(cart.length==0){
+                dlctipbox.show('请下单在结算');
+            }else{
+                var money = $('#total_price').text()*zhe_kou;
+                $('#account').text(money.toFixed(2));
+                showMask();
+                $('#pay_method').css('bottom','-40%');
+                $('.zhezhaobox').show();
+                $('#pay_method').animate({'bottom':'20%'},300,function(){
+                    $('#pay_method').animate({'bottom':'0'},300);
+                });
+            }
+        });
+        $('body').on('click','.mask',function(){
+            $('.zhezhaobox').hide();
+            hideMask();
+        });
+        //判断商品id购物车是否已有改商品，若有则修改商品数量，没有则添加
+        function cart_fresh(goods_id,num,price,name,device,device_goods_id){
+            var in_cart = 1;
+            var total_price = 0;//统计总价用
+            var total_num = 0;//统计购物车数量
+            for(var i in cart){
+                if(cart[i].device_goods_id == device_goods_id){
+                    in_cart = 0;
+                    cart[i].num = num;
+                    total_price+=num*price;
+//                    total_num+=num*1;
+                    console.log(total_num);
+                    if(num==0){cart.splice(i,1);}
+                }else{
+                    total_price+=cart[i].num*cart[i].price;
+//                    total_num+=cart[i].num*1;
+                }
+            }
+            if(in_cart){
+                if(num==0)return false;
+                total_price+=num*price;
+//                total_num+=num*1;
+                cart.push({goods_id:goods_id,num:num,price:price,name:name,device:device,device_goods_id:device_goods_id});
+            }
+            $('#total_price').text(total_price);
+            var str = '';
+            for(var i in cart){
+                str+='<li>'+
+                       '<span class="c_name">'+cart[i].name+'</span>'+
+                       '<span class="c_price">￥'+cart[i].price+'</span>'+
+                       '<span class="c_num">'+cart[i].num+'</span>'+
+                       '</li>';
+                total_num+=cart[i].num*1;
+            }
+            $('#total_num').text(total_num);
+            $('.cart_list').html(str);
+            console.log(cart);
+        }
+        //拖拽
+        var flag = false;
+        var cur = {
+            x:0,
+            y:0
+        };
+        var nx,ny,dx,dy,x,y ;
+        function down(){
+            flag = true;
+            var touch ;
+            if(event.touches){
+                touch = event.touches[0];
+            }else {
+                touch = event;
+            }
+            cur.x = touch.clientX;
+            cur.y = touch.clientY;
+            dx = div2.offsetLeft;
+            dy = div2.offsetTop;
+        }
+        function move(){
+            if(flag){
+                var touch ;
+                if(event.touches){
+                    touch = event.touches[0];
+                }else {
+                    touch = event;
+                }
+                nx = touch.clientX - cur.x;
+                ny = touch.clientY - cur.y;
+                x = dx+nx;
+                y = dy+ny;
+                if(x<0){x=0}
+                if(y<0){y=0}
+                if(x>($(document).width()-$('.order').width())){x=$(document).width()-$('.order').width()}
+                if(y>($(document).height()-$('.order').height()-$('.foot').height())){y=$(document).height()-$('.order').height()-$('.foot').height()}
+                div2.style.left = x+"px";
+                div2.style.top = y +"px";
+                //阻止页面的滑动默认事件
+                $("document").bind("touchmove",function(event){event.preventDefault;})
+            }
+        }
+        //鼠标释放时候的函数
+        function end(){
+            flag = false;
+            $("document").unbind("touchmove");
+        }
+        var div2 = document.getElementById("order");
+        div2.addEventListener("touchstart",function(){
+            down();
+        },false)
+        div2.addEventListener("touchmove",function(){
+            move();
+        },false)
+        div2.addEventListener("touchend",function(){
+            end();
+        },false);
+        //支付
+        $('#pay').click(function(){
+            var type = $('input[name=pay]:checked').val();
+            var order_date = '';
+            for(var i in cart){
+                order_date+=cart[i].goods_id+':'+cart[i].num+':'+cart[i].device_goods_id+',';
+            }
+            order_date = order_date.slice(0,order_date.length-1);
+            if(type==1){
+                //微信支付
+                dlctipbox.loading('请稍后...');
+                if(is_weixn()){
+                	//开始调用微信支付
+	                dlc_request('/Wxsite/MylGoods/api',{'api_name':'pay','macno':getUrlParam('macno'),'order_date':order_date,'type':type},function(res){
+	                    console.log(res);
+	                    dlctipbox.clear();
+	                    if(res.code==1){
+	                        jsApiParameters=res.data;
+	                        callpay();
+	                    }else{
+	                        dlctipbox.show(res.msg);
+	                    }
+	                })
+                }else{
+                	dlctipbox.show('请使用微信打开支付');
+                }
+            }else if(type==2){
+                dlctipbox.loading('请稍后...');
+                if(is_weixn()){
+                	 
+                	 dlc_request('/Wxsite/MylGoods/api',{'api_name':'pay','macno':getUrlParam('macno'),'order_date':order_date,'type':type},function(res){
+	                    dlctipbox.clear();
+	                    if(res.code==1){
+                             var form = res.data; 
+                            $("#alipayForm").append(form);
+                            $("#alipayForm script").remove(); 
+                            var queryParam = '';
+                            Array.prototype.slice.call(document.querySelectorAll("input[type=hidden]")).forEach(function (ele) {
+                                queryParam += '&' + ele.name + "=" + encodeURIComponent(ele.value);
+                            });
+                            var url = document.getElementsByName("alipaysubmit")[0].action+''+queryParam;
+                            _AP.pay(url);
+	                    }
+	                })
+
+                }
+            }else{
+                dlctipbox.show('请选择支付方式');
+            }
+            console.log(type);
+        });
+    // 提交支付信息
+    var jsApiParameters = {};
+    //调用微信JS api 支付
+    function jsApiCall()
+    {
+        WeixinJSBridge.invoke(
+                'getBrandWCPayRequest',
+                jsApiParameters, // 提交的支付信息
+                function(res){
+                    //alert(JSON.stringify(res));
+                    WeixinJSBridge.log(res.err_msg);
+                    //alert(res.err_msg)
+                    if(res.err_msg == 'get_brand_wcpay_request:ok'){
+                        //dlctipbox.show('支付成功');
+                        //history.go(-1);
+//                            location.replace('./c_shop.html?macno='+getUrlParam('macno')+'&ran='+Math.random());
+                        location.reload();
+                    }else{
+                        dlctipbox.show("取消支付");
+                        $('.mask').click();
+                    }
+                    $('.mask').click();
+                }
+        );
+    }
+    //调用微信 支付
+    function callpay()
+    {
+        if (typeof WeixinJSBridge == "undefined"){
+            if( document.addEventListener ){
+                document.addEventListener('WeixinJSBridgeReady', jsApiCall, false);
+
+            }else if (document.attachEvent){
+                document.attachEvent('WeixinJSBridgeReady', jsApiCall);
+                document.attachEvent('onWeixinJSBridgeReady', jsApiCall);
+
+            }
+        }else{
+            jsApiCall();
+        }
+    }
+    // alert(is_weixn())
+function is_weixn(){
+    var ua = navigator.userAgent.toLowerCase();  
+    if(ua.match(/MicroMessenger/i)=="micromessenger") {  
+        return true;  
+    } else {  
+        return false;  
+    }  
+}  
+</script>

@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="viewport" content="width=device-width,target-densitydpi=high-dpi,initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <meta name="format-detection" content="telephone=no, email=no">
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+    <meta http-equiv="Cache-Control" content="no-cache" />
+    <!--设置存缓-->
+    <!-- css -->
+    <link rel="stylesheet" href="../css/reset.css">
+    <link rel="stylesheet" href="../css/swiper.min.css">
+    <title>选择商品</title>
+    <!-- 设置rem -->
+    <script type="text/javascript" src="../js/adaptive.js"></script>
+    <script>
+    window['adaptive'].desinWidth = 750;
+    window['adaptive'].baseFont = 28;
+    window['adaptive'].init();
+    </script>
+    <style>
+    .c999 span{
+        width: 1.2rem;display: inline-block;
+    }
+    .c999 i{
+        color: #333
+    }
+    .img{
+        margin-right: 0.24rem;width: 0.33rem
+    }
+    .cont{
+        border:1px solid #dadada;
+        border-radius: 0.1rem
+    }
+    </style>
+</head>
+
+<body class="bc-gray conTent paddlr20">
+    <!--<div class="margin-top-20 bc-fff padd20 cont">-->
+        <!--<div><img src="../img/message.png" >设备异常消息</div>-->
+        <!--<div class="c999 padd20">-->
+            <!--<div>-->
+                <!--<span>设备编号</span>-->
+                <!--<i>546878</i>-->
+            <!--</div>-->
+            <!--<div>-->
+                <!--<span>设备地址</span>-->
+                <!--<i>南城区高盛科技大厦</i>-->
+            <!--</div>-->
+            <!--<div>-->
+                <!--<span>设备在线</span>-->
+                <!--<i>是</i>-->
+            <!--</div>-->
+            <!--<div>-->
+                <!--<span>设备描述</span>-->
+                <!--<i>设备出现异常，请及时处理</i>-->
+            <!--</div>-->
+        <!--</div>-->
+        <!--<div class="c999 tr">2017-05-04</div>-->
+    <!--</div>-->
+    <!--<div class="margin-top-20 bc-fff padd20 cont">-->
+        <!--<div><img src="../img/message.png" >设备异常消息</div>-->
+        <!--<div class="c999 padd20">-->
+            <!--<div>-->
+                <!--<span>设备编号</span>-->
+                <!--<i>546878</i>-->
+            <!--</div>-->
+            <!--<div>-->
+                <!--<span>设备地址</span>-->
+                <!--<i>南城区高盛科技大厦</i>-->
+            <!--</div>-->
+            <!--<div>-->
+                <!--<span>设备在线</span>-->
+                <!--<i>是</i>-->
+            <!--</div>-->
+            <!--<div>-->
+                <!--<span>设备描述</span>-->
+                <!--<i>设备出现异常，请及时处理</i>-->
+            <!--</div>-->
+        <!--</div>-->
+        <!--<div class="c999 tr">2017-05-04</div>-->
+    <!--</div>-->
+</body>
+</html>
+<script src="../js/jquery-1.8.3.min.js"></script>
+<script src="../js/dlc.js" type="text/javascript" charset="utf-8"></script>
+<script>
+    $(function(){
+        dlc_request('Wxsite/MylGoods/api',{api_name:'facility',page:1,pagesize:9999},function(res){
+            console.log(res);
+            if(res.code==1){
+                var res = res.data;
+                var str='';
+                for(var i in res){
+                    str+='<div class="margin-top-20 bc-fff padd20 cont">'+
+                            '<div><img src="../img/message.png" class="img">'+(res[i].type==1?'设备异常消息':'设备补货通知')+'</div>'+
+                            '<div class="c999 padd20">'+
+                            '<div>'+
+                            '<span>设备编号</span>'+
+                            '<i>'+res[i].macno+'</i>'+
+                            '</div>'+
+                            '<div>'+
+                            '<span>设备地址</span>'+
+                            '<i>'+res[i].address+'</i>'+
+                            '</div>'+
+                            '<div>'+
+                            '<span>设备在线</span>'+
+                            '<i>'+(res[i].status==1?'在线中':res[i].status==2?'不在线':'设备故障')+'</i>'+
+                            '</div>'+
+                            '<div>'+
+                            '<span>设备描述</span>'+
+                            '<i>'+res[i].log+'</i>'+
+                    '</div>'+
+                    '</div>'+
+                    '<div class="c999 tr">'+format(res[i].ctime,'Y-m-d H:i:s')+'</div>'+
+                            '</div>';
+                }
+                str=str?str:emptyTip('暂无消息');
+                $('body').html(str);
+            }else{
+                dlctipbox.show(res.msg);
+            }
+        });
+    });
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

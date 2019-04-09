@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+
+    <head>
+        <title>选择商品</title>
+        <meta charset="UTF-8">
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+        <meta name="viewport" content="width=device-width,target-densitydpi=high-dpi,initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+        <meta name="format-detection" content="telephone=no, email=no">
+        <meta name="apple-mobile-web-app-capable" content="yes" />
+        <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+        <meta http-equiv="Cache-Control" content="no-cache" />
+        <link rel="stylesheet" href="../css/o_base.css">
+        <link rel="stylesheet" href="../css/o_style.css">
+        <link rel="stylesheet" href="../css/layui.css">
+        <link rel="stylesheet" href="../css/layer.css">
+        <style>
+        .content img{
+            width: 100px;
+            height: 100px;
+        }
+        </style>
+    </head>
+    <body>
+        <div id="select">
+            <div class="selectTitle">
+                <div class="searchBar pd-15">
+                    <input type="text" placeholder="请输入关键字" class="wd-100">
+                </div>
+            </div>
+            <div class="selectMain mg-t-10" style="display:none">
+                
+            </div>
+            <div class="selectBtn mg-15">
+                <button class="btn wd-100 mg-t-20 radius5 add_btn">确定</button>
+            </div>
+        </div>
+    </body>
+    <script src="../js/o_base.js"></script>
+    <script src="../js/jquery-1.11.1.min.js"></script>
+    <script src="../js/layui.all.js"></script>
+    <script src="../js/layer.js"></script>
+    <script>
+        $(function () {
+
+            var hasData = false;
+
+            $(".selectMain").on("click",".radio img",function (){
+                var _this = $(this);
+                change(_this);
+            });
+
+            $(".selectMain").on("click",".content",function () {
+                var _this = $(this).siblings().children("img");
+                change(_this);
+            });
+
+            $(".searchBar input").blur(function () {
+
+                var id = getItem("deviceId");
+                    id = 1;
+                var title = $(this).val();
+                var param = {api_name:"goodsSelect",device_id:id,title:title};
+                var url = "AddGoods/api";
+
+                ajaxPost(param,url,function(datas) {
+
+                    var data = datas.data;
+                    if(data.length == 0){
+                        $(".selectMain").empty().append("<div class='ta-center'>..暂无数据..</div>").show()
+                        return false;
+                    }
+                    var str = '';
+                    for(var i = 0; i < data.length; i++){
+                        str += '<div class="list flex" data-id="'+data[i].goods_id+'">'+
+                                    '<div class="wd-15 box radio">'+
+                                        '<img class="wd-60" src="../img/i_unselect.png" alt="">'+
+                                    '</div>'+
+                                    '<div class="content flex wd-85">'+
+                                        '<div class="wd-30 box border-b pd-10">'+
+                                            '<img src="'+data[i].img+'" alt="">'+
+                                        '</div>'+
+                                        '<div class="wd-70 border-b pd-10 name">'+data[i].title+'</div>'+
+                                    '</div>'+
+                                '</div>';
+
+                    }
+
+                    hasData = true;
+
+                    $(".selectMain").empty().append(str).show()
+
+                },function (error) {
+                    layer.open({
+                        content: error,
+                        skin: 'msg',
+                        time: 2 //2秒后自动关闭
+                    });
+                });
+            });
+
+            $(".add_btn").on("click",function () {
+
+                if(hasData){
+                    var name = $(".check").parent().siblings().find(".name").html()
+                        // name = "cake";
+                    var goodsId = $(".check").parent().parent().data("id")
+                    setItem("goodsId", goodsId);
+                    setItem("goodsName",name);
+                    setItem("goodsImg",$(".check").parent().siblings(".content").children(".box").html());
+                    setItem("goodsTime",new Date().getTime())
+
+                    goTo("./o_append.html","name="+name);
+                }else{
+                    layer.open({
+                        content: "没有此商品",
+                        skin: 'msg',
+                        time: 2 //2秒后自动关闭
+                    });
+                }
+                
+            });
+
+            function change(tag){
+                if(!tag.hasClass("check")){
+                    var siblings = $(".list .radio img");
+                    siblings.removeClass("check").attr("src","../img/i_unselect.png");
+                    tag.addClass("check").attr("src","../img/i_select.png");
+                }else{
+                    console.log("nothing")
+                }
+            }
+
+        })
+    </script>
+</html>

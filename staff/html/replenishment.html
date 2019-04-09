@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="viewport" content="width=device-width,target-densitydpi=high-dpi,initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <meta name="format-detection" content="telephone=no, email=no">
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+    <meta http-equiv="Cache-Control" content="no-cache" />
+    <!--设置存缓-->
+    <!-- css -->
+    <link rel="stylesheet" href="../css/reset.css">
+    <title>补货</title>
+    <!-- 设置rem -->
+    <script type="text/javascript" src="../js/adaptive.js"></script>
+    <script>
+        window['adaptive'].desinWidth = 750;
+        window['adaptive'].baseFont = 28;
+        window['adaptive'].init();
+    </script>
+    <style>
+        .img {
+            width: 0.32rem;
+            height: 0.36rem
+        }
+
+        .number i{
+            width: 0.45rem;
+            line-height: 0.45rem;
+            border: 1px solid #eee;
+            border-radius: 0.08rem;
+            text-align: center;
+            display: inline-block;
+        }
+
+        .number {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            color: #999
+        }
+
+        .number span {
+            min-width: 0.54rem;
+            text-align: center;
+            display: inline-block;
+        }
+    </style>
+</head>
+
+<body class="bc-gray conTent">
+<div class="paddlr20 bc-fff flex1" style="overflow-y: scroll;">
+    <div class="height8 border-bottom"><img src="../img/shopDelites.png" class="img"><span class="margin-left-20">商品明细</span></div>
+    <ul id="goods">
+        <!--<li class="space_between height8 border-bottom">-->
+        <!--<span>牛排</span>-->
+        <!--<div title="56" class="number">-->
+        <!--<i class="minus">-</i>-->
+        <!--<span>0</span>-->
+        <!--<i class="add">+</i>-->
+        <!--</div>-->
+        <!--</li>-->
+        <!--<li class="space_between height8 border-bottom">-->
+        <!--<span>牛排</span>-->
+        <!--<div class="number">-->
+        <!--<i class="minus">-</i>-->
+        <!--<span>0</span>-->
+        <!--<i class="add">+</i>-->
+        <!--</div>-->
+        <!--</li>-->
+    </ul>
+</div>
+<div class="btn"> 确定</div>
+</body>
+
+</html>
+<script src="../js/jquery-1.8.3.min.js"></script>
+<script src="../js/dlc.js" type="text/javascript" charset="utf-8"></script>
+<script>
+    $(function(){
+        init_list();
+        function init_list(){
+            dlctipbox.loading('请稍后...');
+            dlc_request('Wxsite/Lzjrevenue/api',{api_name:'replenishment',macno:getUrlParam('macno'),device_goods_id:getUrlParam('id')},function(res){
+                console.log(res);
+                dlctipbox.clear();
+                if(res.code==1){
+                    var res = res.data;
+                    var str = '';
+                    for(var i in res){
+                        str+='<li class="space_between height8 border-bottom good" data-id="'+res[i].device_goods_id+'">'+
+                                '<span>'+res[i].title+'</span>'+
+                                '<div class="number">'+
+                                '<i class="minus">-</i>'+
+                                '<span class="inventory">'+res[i].inventory+'</span>'+
+                                '<i class="add">+</i>'+
+                                '</div>'+
+                                '</li>';
+                    }
+                    str=str?str:emptyTip('暂无商品');
+                    $('#goods').html(str);
+                }else{
+                    dlctipbox.show(res.msg);
+                }
+            });
+        }
+    });
+    // 加号
+    $("#goods").on('click', '.add', function() {
+        var t = $(this).prev();
+        console.log(t[0].innerHTML) //取到数量
+        t.text(parseInt(t[0].innerHTML) + 1); //parseInt()
+    });
+    // 减号
+    $("#goods").on('click', '.minus', function() {
+        var t = $(this).next();
+        t.text(parseInt(t[0].innerHTML) - 1);
+        if (t.text() < 0) {
+            t.text(0) //当数量小于0的时候让最小值等于0
+        }
+    });
+    $(".btn").click(function(){
+        var replenish = [];
+        $('.good').each(function(){
+            replenish.push({id:$(this).data('id'),inventory:$(this).find('.inventory').text()});
+        });
+        console.log(replenish);
+        if(replenish.length==0){
+            dlctipbox.show('无商品');
+        }else{
+            dlctipbox.loading('请稍后...');
+            dlc_request('Wxsite/Lzjrevenue/api',{api_name:'confirm_replenishment',replenish:replenish},function(res){
+                console.log(res);
+                dlctipbox.clear();
+                dlctipbox.show(res.msg);
+            });
+        }
+    })
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+

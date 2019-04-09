@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="viewport" content="width=device-width,target-densitydpi=high-dpi,initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <meta name="format-detection" content="telephone=no, email=no">
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+    <meta http-equiv="Cache-Control" content="no-cache" />
+    <!--设置存缓-->
+    <!-- css -->
+    <link rel="stylesheet" href="../css/reset.css">
+    <title>我的积分</title>
+    <!-- 设置rem -->
+    <script type="text/javascript" src="../js/adaptive.js"></script>
+    <script>
+    window['adaptive'].desinWidth = 750;
+    window['adaptive'].baseFont = 28;
+    window['adaptive'].init();
+    </script>
+    <style>
+    .top {
+        height: 4rem;
+        text-align: center;
+        background: #e27e20;
+    }
+
+    .top img {
+        width: 1.48rem;
+        height: 1.48rem;
+        border-radius: 1.48rem;
+        margin: 0.35rem 0 0.24rem 0;
+        border:2px solid #fff;
+    }
+
+    .top span {
+        padding: 0.05rem 0.45rem;
+        color: #e27e20;
+        background: #fff;
+        border-radius: 0.08rem;
+        margin: 0.2rem 0;
+        display: inline-block;
+    }
+
+    .point {}
+    </style>
+</head>
+
+<body class="bc-gray">
+    <div class="top">
+        <!--<img src="../img/headImg.png" style="width: 1.48rem">-->
+        <!--<p class="cfff">127878769</p>-->
+        <!--<span class="point">300</span>-->
+        <!--<p class="cfff font18">积分(可打<i>95</i>折扣)</p>-->
+    </div>
+    <ul class="bc-fff margin-top-20" style="text-align: center;">
+        <!--<li class="space_between padd20 border-bottom">-->
+            <!--<div class="flex1">-->
+                <!--<p class="c999">2017.10.01</p>-->
+                <!--<p class="c999 margin-top-10">2017.10.01</p>-->
+            <!--</div>-->
+            <!--<span class="flex2 margin-left-20 margin-right-20">消费金额100增加积分</span>-->
+            <!--<span class="green flex1">+100</span>-->
+        <!--</li>-->
+        <!--<li class="space_between padd20 border-bottom">-->
+            <!--<div class="flex1">-->
+                <!--<p class="c999">2017.10.01</p>-->
+                <!--<p class="c999 margin-top-10">2017.10.01</p>-->
+            <!--</div>-->
+            <!--<span class="flex2 margin-left-20 margin-right-20">消费金额100增加积分</span>-->
+            <!--<span class="green flex1">+100</span>-->
+        <!--</li>-->
+        <!--<li class="space_between padd20 border-bottom">-->
+            <!--<div class="flex1">-->
+                <!--<p class="c999">2017.10.01</p>-->
+                <!--<p class="c999 margin-top-10">2017.10.01</p>-->
+            <!--</div>-->
+            <!--<span class="flex2 margin-left-20 margin-right-20">消费金额100增加积分</span>-->
+            <!--<span class="green flex1">+100</span>-->
+        <!--</li>-->
+
+    </ul>
+</body>
+
+</html>
+<script src="../js/jquery-1.8.3.min.js"></script>
+<script src="../js/dlc.js"></script>
+<script>
+    $(function(){
+        //获取个人信息
+        dlctipbox.loading('请稍后...');
+        dlc_request('/Wxsite/MylGoods/api',{'api_name':'userMessage'},function(res){
+            dlctipbox.clear();
+           console.log(res);
+            if(res.code==1){
+                var res = res.data;
+                $('.top').html('<img src="'+res.oath+'" style="width: 1.48rem">'+
+                        '<p class="cfff">'+res.nickname+'</p>'+
+                        '<span class="point">'+res.integral+'</span>'+
+                        '<p class="cfff font18">'+(!isNaN(res.discount)?'可打'+res.discount+'折':res.discount)+'</p>');
+            }else{
+                dlctipbox.show(res.msg);
+            }
+        });
+        dlc_request('/Wxsite/MylGoods/api',{'api_name':'integralRecord','page':1,'pagesize':9999},function(res){
+            console.log(res);
+            if(res.code==1){
+                var res = res.data;
+                var str = '';
+                for(var i in res){
+                    str+='<li class="space_between padd20 border-bottom">'+
+                            '<div class="flex1">'+
+                            '<p class="c999">'+format(res[i].ctime,'Y-m-d')+'</p>'+
+                    '<p class="c999">'+format(res[i].ctime,'H:i:s')+'</p>'+
+                    '</div>'+
+                    '<span class="flex2 margin-left-10 margin-right-10">'+res[i].log+'</span>'+
+                            '<span class="green flex1">+'+res[i].integral+'</span>'+
+                            '</li>';
+                }
+                if(str){
+                    $('ul').css('background','#fff');
+                }else{
+                    $('ul').css('background','#f5f5f5');
+                }
+                str=str?str:emptyTip('暂无记录');
+                $('ul').html(str);
+            }else{
+                dlctipbox.show(res.msg);
+            }
+        });
+    });
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

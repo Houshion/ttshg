@@ -1,0 +1,60 @@
+<html>
+    <head>
+        <title>选择商品</title>
+        <meta charset="UTF-8">
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+        <meta name="viewport" content="width=device-width,target-densitydpi=high-dpi,initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+        <meta name="format-detection" content="telephone=no, email=no">
+        <meta name="apple-mobile-web-app-capable" content="yes" />
+        <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+        <meta http-equiv="Cache-Control" content="no-cache" />
+        <link rel="stylesheet" href="../css/o_base.css">
+        <link rel="stylesheet" href="../css/o_style.css">
+        <link rel="stylesheet" href="../css/layui.css">
+        <link rel="stylesheet" href="../css/layer.css">
+    </head>
+    <body class="pd-15">
+        <div class="flex replenishment add">
+            <div class="wd-15 box">
+                <img src="../img/i_buhuo.png" alt="">
+            </div>
+            <div class="wd-70 ta-left type">设备补货</div>
+            <div class="wd-15 box">
+                <img src="../img/i_right.png" alt="" class="right">
+            </div>
+        </div>
+        <div class="flex replenishment buy">
+            <div class="wd-15 box">
+                <img src="../img/i_xiaoxi.png" alt="">
+            </div>
+            <div class="wd-70 ta-left type">购买商品</div>
+            <div class="wd-15 box">
+                <img src="../img/i_right.png" alt="" class="right">
+            </div>
+        </div>
+    </body>
+    <script src="../js/o_base.js"></script>
+    <script src="../js/jquery-1.11.1.min.js"></script>
+    <script src="../js/layui.all.js"></script>
+    <script src="../js/layer.js"></script>
+    <script src="../js/dlc.js"></script>
+    <script>
+        $(function () {
+
+            if(!isNull(getUrlParam('macno'))){
+                var macno = getUrlParam('macno');
+                setItem("macNo",getUrlParam('macno'));
+            }else{
+                var macno = getItem("macNo")
+            }
+
+            $(".add").on("click",function () {
+                goTo("./o_equipment.html","macno="+macno);
+            });
+
+            $(".buy").on("click",function () {
+                goTo("./o_choose.html","macno="+macno);
+            });
+        })
+    </script>
+</html>

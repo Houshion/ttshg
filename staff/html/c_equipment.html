@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="viewport" content="width=device-width,target-densitydpi=high-dpi,initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <meta name="format-detection" content="telephone=no, email=no">
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+    <meta http-equiv="Cache-Control" content="no-cache" />
+    <!--设置存缓-->
+    <!-- css -->
+    <link rel="stylesheet" href="../css/reset.css">
+    <link rel="stylesheet" href="../css/swiper.min.css">
+    <title>设备</title>
+    <!-- 设置rem -->
+    <script type="text/javascript" src="../js/adaptive.js"></script>
+    <script>
+    window['adaptive'].desinWidth = 750;
+    window['adaptive'].baseFont = 28;
+    window['adaptive'].init();
+    </script>
+    <style>
+    .top span {
+        width: 1.43rem;
+        display: inline-block;
+    }
+
+    .img {
+        width: 0.32rem;
+        height: 0.36rem
+    }
+
+    .opera_ico {
+        width: 0.35rem;
+    }
+
+    .flexbox {
+
+        align-items: center;
+        background: #fff;
+        text-align: center;
+    }
+
+    .one {
+        background: #abcd67;
+        color: #fff
+    }
+
+    .two {
+        background: #e27e20;
+        color: #fff
+    }
+
+    footer {
+        position: fixed;
+        bottom: 0;
+    }
+    li{font-size: .28rem;}
+    .opera_item + .opera_item{margin-left: .1rem;}
+    </style>
+</head>
+
+<body class="bc-gray">
+    <div class="paddlr20 bc-fff top" id="device">
+        <!--<p class="height7"><span class="c999">设备名称</span><i class="c333">设备1</i></p>-->
+        <!--<p class="height7"><span class="c999">设备型号</span><i class="c333">16546746874</i></p>-->
+        <!--<p class="height7"><span class="c999">设备编码</span><i class="c333">4647686868</i></p>-->
+        <!--<p class="height7"><span class="c999">设备地址</span><i class="c333">南城区兆丰打哈</i></p>-->
+    </div>
+    <div class="paddlr20 height8 bc-fff space_between abnormal margin-top-20">
+        <div><img src="../img/admin.png" class="img"><span class="margin-left-20">设备异常(<i id="count"></i>)</span></div>
+        <img src="../img/right.png" style="width: 0.13rem">
+    </div>
+    <div class="paddlr20 bc-fff margin-top-20 " style="padding-bottom: 1rem;">
+        <div class="height8 border-bottom"><img src="../img/shopDelites.png" class="img"><span class="margin-left-20">商品明细</span></div>
+        <ul id="device_goods">
+            <!--<li class="space_between height8 border-bottom">-->
+                <!--<div class="col3">-->
+                    <!--<span>牛排</span>-->
+                    <!--<span class="col9">（002） 剩余量：56</span>-->
+                <!--</div>-->
+                <!--<div class="flex_a">-->
+                    <!--<div class="plr10 opera_item">-->
+                        <!--<img src="../img/edit.png" class="opera_ico">-->
+                    <!--</div>-->
+                    <!--<div class="plr10 opera_item">-->
+                        <!--<img src="../img/change.png" class="opera_ico">-->
+                    <!--</div>-->
+                    <!--<div class="plr10 opera_item">-->
+                        <!--<img src="../img/delect.png" class="opera_ico">-->
+                    <!--</div>-->
+                <!--</div>-->
+            <!--</li>-->
+            <!--<li class="space_between height8 border-bottom">-->
+                <!--<div class="col3">-->
+                    <!--<span>牛排</span>-->
+                    <!--<span class="col9">（002） 剩余量：56</span>-->
+                <!--</div>-->
+                <!--<div class="flex_a">-->
+                    <!--<div class="plr10 opera_item">-->
+                        <!--<img src="../img/edit.png" class="opera_ico">-->
+                    <!--</div>-->
+                    <!--<div class="plr10 opera_item">-->
+                        <!--<img src="../img/change.png" class="opera_ico">-->
+                    <!--</div>-->
+                    <!--<div class="plr10 opera_item">-->
+                        <!--<img src="../img/delect.png" class="opera_ico">-->
+                    <!--</div>-->
+                <!--</div>-->
+            <!--</li>-->
+        </ul>
+    </div>
+    <footer class="flexbox">
+        <div class="flex1 one height8">去补货并开锁</div>
+        <div class="flex1 two height8">增加商品</div>
+    </footer>
+</body>
+
+</html>
+<script src="../js/jquery-1.8.3.min.js"></script>
+<script src="../js/dlc.js" type="text/javascript" charset="utf-8"></script>
+<script>
+    $(function(){
+        var device_id = '';
+        $('title').text('设备'+getUrlParam('macno'));
+        $(".one").click(function() {
+            if(confirm('是否开锁?')){
+                if(getUrlParam('macno')){
+                    dlc_request('Wxsite/Lzjrevenue/api',{api_name:'unlocking',macno:getUrlParam('macno')},function(res){
+                        console.log(res);
+                        if(res.code==1){
+                            if(res.data.status==1){
+                                dlctipbox.show('开锁成功');
+                                setTimeout(function(){
+                                    location.href = './c_replenishment.html?macno='+getUrlParam('macno');
+                                },1000)
+                            }else{
+                                dlctipbox.show('开锁失败');
+                            }
+                        }else{
+                            dlctipbox.show(res.msg);
+                        }
+                    });
+                }else{
+                    dlctipbox.show('获取不到设备号');
+                }
+            }
+        });
+        $(".two").click(function() {
+            window.location.href = 'c_addShop.html?macno='+getUrlParam('macno');
+        });
+        $(".abnormal").click(function() {
+           if($(this).data('id')){
+               window.location.href = 'c_abnormal.html?macno='+getUrlParam('macno')+'&device_id='+$(this).data('id');
+           }else{
+               dlctipbox.show('设备id获取不到');
+           }
+        });
+        dlctipbox.loading('请稍后...');
+        dlc_request('Wxsite/Lqsdevice/api',{api_name:'device_info',macno:getUrlParam('macno')},function(res){
+            console.log(res);
+            //alert(JSON.stringify(res));
+            console.log(res);
+            dlctipbox.clear();
+            if(res.code==1){
+                var device = res.data.device;
+                var goods = res.data.device_goods;
+                $('#count').text(res.data.count);
+                $('.abnormal').attr('data-id',device.device_id);
+                device_id = device.device_id;
+                $('#device').html('<p class="height7"><span class="c999">设备名称</span><i class="c333">'+device.title+'</i></p>'+
+                        '<p class="height7"><span class="c999">设备型号</span><i class="c333">'+device.model+'</i></p>'+
+                        '<p class="height7"><span class="c999">设备编码</span><i class="c333">'+device.macno+'</i></p>'+
+                        '<p class="height7"><span class="c999">设备地址</span><i class="c333">'+device.address+'</i></p>');
+                var str='';
+                for(var i in goods){
+//                    str+='<li class="space_between height8 border-bottom" data-id="'+goods[i].goods_id+'">'+
+//                            '<span>'+goods[i].title+'</span>'+
+//                            '<div class="c999">'+
+//                            '<span>剩余量：<i>'+goods[i].inventory+'</i></span>'+
+//                    '<img src="../img/delect.png" class="del" data-id="'+goods[i].goods_id+'"/>'+
+//                            '</div>'+
+//                            '</li>';
+                    str+='<li class="space_between height8 border-bottom" data-id="'+goods[i].goods_id+'">'+
+                            '<div class="col3">'+
+                            '<span>'+goods[i].title+'</span>'+
+                            '<span class="col9">（'+goods[i].aisle_num+'） 剩余量：'+goods[i].inventory+'</span>'+
+                    '</div>'+
+                    '<div class="flex_a">'+
+                            '<div class="plr10 opera_item edit" data-id="'+goods[i].device_goods_id+'">'+
+                            '<img src="../img/edit.png" class="opera_ico">'+
+                            '</div>'+
+                            '<div class="plr10 opera_item change" data-id="'+goods[i].device_goods_id+'">'+
+                            '<img src="../img/change.png" class="opera_ico">'+
+                            '</div>'+
+                            '<div class="plr10 opera_item del" data-id="'+goods[i].device_goods_id+'">'+
+                            '<img src="../img/delect.png" class="opera_ico">'+
+                            '</div>'+
+                            '</div>'+
+                            '</li>';
+                }
+                str = str?str:emptyTip('暂无记录');
+                $('#device_goods').html(str);
+            }else{
+                dlctipbox.show(res.msg);
+            }
+            //window.location.href='c_shopAdmin.html'
+        });
+        $('#device_goods').on('click','.del',function(){
+            if(confirm('确定要删除吗?')){
+                if($(this).data('id')){
+                    dlctipbox.loading('请稍后...');
+                    dlc_request('Wxsite/Lqsdevice/api',{'api_name':'delete_goods','device_goods_id':$(this).data('id')},function(res){
+                        console.log(res);
+                        dlctipbox.clear();
+                        if(res.code == 1){
+                            location.reload();
+                        }
+                        dlctipbox.show(res.msg);
+                    });
+                }else{
+                    dlctipbox.show('商品id获取不到');
+                }
+            }
+        });
+        $('#device_goods').on('click','.edit',function(){
+            var goods_id = $(this).data('id')
+            if(confirm('是否开锁?')){
+                if(getUrlParam('macno')){
+                    dlc_request('Wxsite/Lzjrevenue/api',{api_name:'unlocking',macno:getUrlParam('macno')},function(res){
+                        console.log(res);
+                        if(res.code==1){
+                            if(res.data.status==1){
+                                dlctipbox.show('开锁成功');
+                                setTimeout(function(){
+                                    location.href = './replenishment.html?macno='+getUrlParam('macno')+'&id='+goods_id;
+                                },1000)
+                            }else{
+                                dlctipbox.show('开锁失败');
+                            }
+                        }else{
+                            dlctipbox.show(res.msg);
+                        }
+                    });
+                }else{
+                    dlctipbox.show('获取不到设备号');
+                }
+            }
+        });
+        $('#device_goods').on('click','.change',function(){
+            var device_goods_id = $(this).data('id');
+            window.location.href='c_selsectAbnormal.html?macno='+getUrlParam('macno')+'&id='+device_goods_id;
+        });
+    })
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

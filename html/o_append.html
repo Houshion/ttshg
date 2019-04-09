@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+
+    <head>
+        <title>增加商品</title>
+        <meta charset="UTF-8">
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+        <meta name="viewport" content="width=device-width,target-densitydpi=high-dpi,initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+        <meta name="format-detection" content="telephone=no, email=no">
+        <meta name="apple-mobile-web-app-capable" content="yes" />
+        <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+        <meta http-equiv="Cache-Control" content="no-cache" />
+        <link rel="stylesheet" href="../css/o_base.css">
+        <link rel="stylesheet" href="../css/o_style.css">
+        <link rel="stylesheet" href="../css/layui.css">
+        <link rel="stylesheet" href="../css/layer.css">
+    </head>
+    <body>
+        <div id="append" class="">
+            <div class="main">
+                <div class="flex border-b goods">
+                    <div class="pd-15 wd-20">商品名称</div>
+                    <div class="wd-50 pd-15 name"></div>
+                    <div class="wd-30 col_gray select flex box">
+                        <span>去选择</span>
+                        <img src="../img/i_right.png" alt="">
+                    </div>
+                </div>
+                <div class="flex border-b">
+                    <div class="pd-15 wd-20">选择通道</div>
+                    <div class="wd-50 pd-15 aisle"></div>
+                    <div class="wd-30 col_gray select selectaisle flex box">
+                        <span>去选择</span>
+                        <img src="../img/i_right.png" alt="">
+                    </div>
+                </div>
+                <div class="flex border-b">
+                    <div class="pd-15 wd-20">库存量</div>
+                    <div class="wd-80 input">
+                        <input type="number" placeholder="请输入" class="pd-15 wd-80 countNum">
+                    </div>
+                </div>
+                <div class="border-b">
+                    <div class="pd-15">商品示意图</div>
+                    <div class="flex flexWrap UpImage image pd-15">
+                        
+                    </div>
+                </div>
+            </div>
+            <div class="mg-15">
+                <button class="btn wd-100 mg-t-20 radius5 add_btn">确定</button>
+            </div>
+
+            <div class="mask">
+                <div class="list">
+                    <h2 class="title ta-center">可用通道</h2>
+                </div>
+            </div>
+
+        </div>
+    </body>
+    <script src="../js/o_base.js"></script>
+    <script src="../js/jquery-1.11.1.min.js"></script>
+    <script src="../js/layui.all.js"></script>
+    <script src="../js/layer.js"></script>
+    <script src="../js/dlc.js"></script>
+    <script>
+        $(function () {
+
+            var timeSet = getItem("goodsTime");
+            var timeNow = new Date().getTime();
+            //读取缓存的商品信息，仅保存两分钟
+            if( ((timeNow - timeSet)/1000) > 120 ) {
+                moveItem("goodsName");
+                moveItem("goodsImg");
+                moveItem("goodsId");
+                moveItem("goodsTime");
+            }else{
+                $(".name").html(getItem("goodsName"));
+                $(".UpImage").html(getItem("goodsImg"))
+            }
+            //读取缓存的通道信息，仅保存两分钟
+            if(((timeNow - getItem("aisleTime"))/1000) > 120){
+                moveItem("aisleNo");
+                moveItem("aisleTime");
+            }else{
+                $(".aisle").html(getItem("aisleNo"));
+            }
+
+            $(".goods .select").on("click",function (){
+                goTo("./o_select.html")
+            });
+
+            $(".add_btn").on("click",function () {
+
+                var inventory = $(".countNum").val();
+                var aisle_num = 1;
+                var param = {
+                    api_name : "addNewGoods",
+                    device_id : getItem("deviceId"),
+                    goods_id : getItem("goodsId"),
+                    aisle_num : getItem("aisleNo"),
+                    inventory : inventory
+                };
+                var url = "AddGoods/api"
+
+                ajaxPost(param, url, function (datas){
+                    layer.open({
+                        content: datas.msg,
+                        skin: 'msg',
+                        time: 2 //2秒后自动关闭
+                    });
+                    setTimeout(function() {
+                        goTo("./o_equipment.html");
+                    },2000);
+                },function(error){
+                    layer.open({
+                        content: error,
+                        skin: 'msg',
+                        time: 2 //2秒后自动关闭
+                    });
+                });
+
+            })
+
+            $(".selectaisle").on("click",function (){
+
+                var param = {api_name:"aisleNum",device_id:getItem("deviceId")};
+                var url = "AddGoods/api";
+                 ajaxPost(param,url,function(datas){
+
+                    var data = datas.data;
+
+                    $(".mask .list div").remove();
+
+                    if(data.length > 0){
+                        for(var i=0; i<data.length; i++){
+                            $(".mask .list").append('<div class="border-t aisleNo">'+data[i]+'</div>')
+                        }
+                    }else{
+                        $(".mask .list").append('<div class="border-t aisleNo">暂无可用通道</div>')
+                    }
+                    
+
+                 },function(error){
+                    layer.open({
+                        content: error,
+                        skin: 'msg',
+                        time: 2 //2秒后自动关闭
+                    });
+                 })
+
+                $(".mask").show();
+            })
+
+            $(".mask").on("click",".aisleNo",function () {
+
+                var _this = $(this);
+
+
+                if(isNum(_this)){
+                    $(".aisle").html(_this.html());
+                    setItem("aisleNo", _this.html());
+                    setItem("aisleTime", new Date().getTime());
+                }
+                
+                $(".mask").hide()
+            })
+
+            // $(".mask").on("click",function () {
+            //     $(this).hide()
+            // })
+        })
+    </script>
+</html>
+

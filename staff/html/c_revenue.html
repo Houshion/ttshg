@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="viewport" content="width=device-width,target-densitydpi=high-dpi,initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <meta name="format-detection" content="telephone=no, email=no">
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <!--以全屏模式运行-->
+    <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+    <meta http-equiv="Cache-Control" content="no-cache" />
+    <!--设置存缓-->
+    <!-- css -->
+    <link rel="stylesheet" href="../css/reset.css">
+    <title>营收</title>
+    <!-- js -->
+    <script type="text/javascript" src="../js/adaptive.js"></script>
+    <script>
+    window['adaptive'].desinWidth = 750;
+    window['adaptive'].baseFont = 28;
+    window['adaptive'].init();
+    </script>
+    <style>
+    .active {
+        color: #e27e20;
+        border-bottom: 2px solid #e27e20
+    }
+
+    .head {
+        display: flex;
+        align-items: center;
+        height: 1.0rem;
+        background: #fff
+    }
+
+    .head p {
+        flex: 1;
+        text-align: center;
+        background: #fff;
+        height: 100%;
+        line-height: 1.0rem;
+        margin: 0 1.3rem
+    }
+
+    .cont {
+        background: #e27e20;
+        display: flex;
+        justify-content: center;
+        height: 3.0rem;
+        align-items: center;
+        text-align: center;
+        color: #fff
+    }
+
+    .pay {
+        background: #f1bf90;
+        display: flex;
+        justify-content: center;
+        height: 1.3rem;
+        align-items: center;
+        text-align: center;
+        color: #fff
+    }
+    .text span{
+        width: 1.44rem;
+        display: inline-block;
+    }
+    .text p{
+        margin-top:0.10rem;
+    }
+    </style>
+</head>
+
+<body class="bc-gray conTent">
+    <div class="head">
+        <p id="menu1" class="active" onclick="setTab('menu', 1, 2)">每周</p>
+        <p id="menu2" onclick="setTab('menu', 2, 2)">每月</p>
+    </div>
+    <div class=" margin-top-20">
+        <div id="con_menu_1">
+            <div class="bc-fff padd20 c999 space_between">
+                <p><img src="../img/time.png" style="width:0.28rem">
+                    <span class="margin-left-10 time"></span></p>
+                <span>共<i class="c333 device_count">0</i>台设备</span>
+            </div>
+            <div class="cont">
+                <dl class="flex1">
+                    <dt class="font48 weekly_total">￥0</dt>
+                    <dd>总收益</dd>
+                </dl>
+                <dl class="flex1">
+                    <dt class="font48 amount">0</dt>
+                    <dd>总销售（件）</dd>
+                </dl>
+            </div>
+            <div class="pay">
+                <dl class="flex1">
+                    <dt class="font32 wx_pay_total">￥0</dt>
+                    <dd>微信收入(元)</dd>
+                </dl>
+                <dl class="flex1">
+                    <dt class="font32 alipay_total">￥0</dt>
+                    <dd>支付宝收入(元)</dd>
+                </dl>
+                <dl class="flex1">
+                    <dt class="font32 cashpay_total">￥0</dt>
+                    <dd>现金收入(元)</dd>
+                </dl>
+            </div>
+        </div>
+        <div id="con_menu_2" style="display: none;">
+            <div class="bc-fff padd20 c999 ">    
+                <img src="../img/time.png" style="width:0.28rem">
+                <span class="margin-left-10 timed"></span>
+            </div>
+            <ul class="margin-top-20 list">
+                <!--<li class="padd20 bc-fff border-bottom space_between">
+                    <div class="text">
+                        <p><span class="c999">设备型号</span><i>54768746</i></p>
+                        <p><span class="c999">设备编码</span><i>54768746</i></p>
+                        <p class="hid1"><span class="c999">设备地址</span><i class="">南城区高盛科技大厦303迪尔西信息科技邮箱恭喜</i></p>
+                    </div>
+                    <img src="../img/right.png" style="width: 0.15rem">
+                </li>
+                <li class="padd20 bc-fff border-bottom space_between">
+                    <div class="text">
+                        <p><span class="c999">设备型号</span><i>54768746</i></p>
+                        <p><span class="c999">设备编码</span><i>54768746</i></p>
+                        <p class="hid1"><span class="c999">设备地址</span><i class="">南城区高盛科技大厦303迪尔西信息科技邮箱恭喜</i></p>
+                    </div>
+                    <img src="../img/right.png" style="width: 0.15rem">
+                </li>-->
+                
+            </ul>
+        </div>
+    </div>
+</body>
+<script src="../js/jquery-1.8.3.min.js"></script>
+<script type="text/javascript" src="../js/dlc.js"></script>
+<script>
+    $(".list").on('click','li',function () {
+        window.location.href='c_revenDelites.html?id='+$(this).data('id')+'&macno='+$(this).data('macno')
+    });
+    
+    dlc_request('Wxsite/Lzjrevenue/api',{api_name:'weekly_statistics'},function(res){
+	   console.log(res);
+	   //alert(JSON.stringify(res));
+	  	$('.wx_pay_total').text('￥'+res.data.wx_pay_total);
+	  	$('.alipay_total').text('￥'+res.data.alipay_total);
+	  	$('.cashpay_total').text('￥'+res.data.cashpay_total);
+	  	$('.time').text(res.data.time);
+	  	$('.amount').text(res.data.amount);
+	  	$('.device_count').text(res.data.device_count);
+	  	$('.weekly_total').text('￥'+res.data.weekly_total);
+	});
+    
+    function setTab(name, cursel, n) { //参数为 id  当前选项  控制数量总计
+    	console.log(cursel);
+	    for (i = 1; i <= n; i++) {
+	        var zx = document.getElementById(name + i);
+	        var con = document.getElementById("con_" + name + "_" + i);
+	        zx.className = i == cursel ? "active" : "";
+	        con.style.display = i == cursel ? "block" : "none";
+	    }
+	    
+	    if(cursel==1){
+	    	dlc_request('Wxsite/Lzjrevenue/api',{api_name:'weekly_statistics'},function(res){
+		       console.log(res);
+		      	$('.wx_pay_total').text('￥'+res.data.wx_pay_total);
+			  	$('.alipay_total').text('￥'+res.data.alipay_total);
+			  	$('.cashpay_total').text('￥'+res.data.cashpay_total);
+			  	$('.time').text(res.data.time);
+			  	$('.amount').text(res.data.amount);
+			  	$('.device_count').text(res.data.device_count);
+			  	$('.weekly_total').text('￥'+res.data.weekly_total);
+		    });
+	    }else{
+	    	 dlc_request('Wxsite/Lzjrevenue/api',{api_name:'revenue_device',page:1,pagesize:9999},function(res){
+			   console.log(res);
+			   $('.timed').text(res.data.time);
+			   if(res.data.list.length==0)
+			   	$('.list').append('<li class="padd20 bc-fff border-bottom space_between">暂无设备</li>')
+				else
+			  	for(i in res.data.list){
+			  		$('.list').html(
+			  			'<li class="padd20 bc-fff border-bottom space_between" data-id="'+res.data.list[i].device_id+'" data-macno="'+res.data.list[i].macno+'">'+
+		                    '<div class="text">'+
+		                        '<p><span class="c999">设备型号</span><i>'+res.data.list[i].model+'</i></p>'+
+		                        '<p><span class="c999">设备编码</span><i>'+res.data.list[i].macno+'</i></p>'+
+		                        '<p class="hid1"><span class="c999">设备地址</span><i class="">'+res.data.list[i].address+'</i></p>'+
+		                   ' </div>'+
+		                    '<img src="../img/right.png" style="width: 0.15rem">'+
+		                '</li>'
+			  		)
+			  	}
+			});
+	    }
+	}
+
+</script>
+
+</html>

@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="viewport" content="width=device-width,target-densitydpi=high-dpi,initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <meta name="format-detection" content="telephone=no, email=no">
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+    <meta http-equiv="Cache-Control" content="no-cache" />
+    <!--设置存缓-->
+    <!-- css -->
+    <link rel="stylesheet" href="../css/reset.css">
+    <link rel="stylesheet" href="../css/swiper.min.css">
+    <title>绑定手机</title>
+    <!-- 设置rem -->
+    <script type="text/javascript" src="../js/adaptive.js"></script>
+    <script>
+    window['adaptive'].desinWidth = 750;
+    window['adaptive'].baseFont = 28;
+    window['adaptive'].init();
+    </script>
+    <style>
+        body{overflow: hidden;}
+        .swiper-container {
+            width: 100%;
+            height: 3.8rem;
+        }
+
+        .swiper-slide img{
+            height: 3.8rem;
+            width: 100%;
+        }
+        .cont{
+            margin: 0.45rem
+        }
+        .cont input{
+            line-height: 1.0rem;
+
+        }
+        .yanzheng{
+            padding: 0.15rem 0.2rem;
+            background: #e27e20;
+            border-radius: 0.08rem;
+            float: right;
+            color: #fff;
+        }
+        .flex_a{display: flex;align-items: center;}
+        .flex1{flex: 1;}
+       input{font-size: .28rem;}
+       .tip{background: rgba(0,0,0,.5);display:flex;align-items:center;font-size:.28rem;position: absolute;bottom: 0;left: 0;width: 100%;z-index: 1000;line-height: .6rem;padding: 0 .24rem;color: #fff;}
+    </style>
+</head>
+
+<body class="">
+    <div class="swiper-container">
+        <div class="swiper-wrapper">
+            <!--<div class="swiper-slide"><img src="../img/bg1.png"/></div>-->
+            <!--<div class="swiper-slide"><img src="../img/bg1.png"/></div>-->
+            <!--<div class="swiper-slide"><img src="../img/bg1.png"/></div>-->
+        </div>
+        <!-- 如果需要分页器 -->
+        <!--<div class="swiper-pagination"></div>-->
+        <div class="tip">
+            <img src="../img/bell.png" style="width:.3rem;"/>
+            <div style="flex: 1;margin-left: .2rem;display: flex;align-items: center;">
+                <marquee style="width: 100%;" direction="right" behavior="scroll" scrollamount="1" scrolldelay="0" loop="-1">
+                    <div id="tip_text">暂无公告...</div>
+                </marquee>
+            </div>
+        </div>
+    </div>
+    <div class=" cont">
+    	<div class="border-bottom"><input type="number"  placeholder="请输入手机号码" id="phone"></div>
+    	<div class="border-bottom flex_a"><input type="text"  placeholder="请输入验证码" id="code" class="flex1"><span class="yanzheng">获取验证码</span></div>
+    </div>
+    <div class="row-5"></div>
+    <div class="btn">绑定手机号</div>
+</body>
+</html>
+<script src="../js/jquery-1.8.3.min.js"></script>
+<script src="../js/swiper.min.js"></script>
+<script src="../js/dlc.js"></script>
+<script>
+    $(function(){
+        dlc_request('/Wxsite/MylGoods/api',{'api_name':'logo'},function(res){
+            console.log(res);
+            if(res.code==1){
+                var tip_text = res.data.title;
+                var pics = res.data.pic;
+                var str = '';
+                for(var i in pics){
+                    str+='<div class="swiper-slide"><img src="'+pics[i]+'"/></div>';
+                }
+                if(str){
+                    $('.swiper-wrapper').html(str);
+                }else{
+                    $('.swiper-wrapper').html('<div class="swiper-slide"><img src="../img/bg1.png"/></div>');
+                }
+                $('#tip_text').text(tip_text);
+                var mySwiper = new Swiper('.swiper-container', {
+                    autoplay: 5000, //可选选项，自动滑动
+                    pagination: '.swiper-pagination',
+                    paginationType: 'custom',
+                    autoplayDisableOnInteraction: false
+                });
+            }else{
+                dlctipbox.show('广告图获取失败');
+            }
+        });
+        var onOff = 0;
+        $(".btn").click(function(){
+//            window.location.href='c_shop.html'
+            var phone = $('#phone').val();
+            var code = $('#code').val();
+            if(isNull(phone)){
+                dlctipbox.show('请输入手机号码');
+            }else if(!checkMobileAndTel(phone)){
+                dlctipbox.show('手机号码格式不正确');
+            }else if(isNull(code)){
+                dlctipbox.show('请输入验证码');
+            }else{
+                if(onOff)return false;
+                onOff = 1;
+                dlc_request('/Wxsite/MylGoods/api',{'api_name':'mobileBinding','mobile':phone,'sms':code},function(res){
+                    console.log(res);
+                    if(res.code==1){
+                       setTimeout(function(){
+                          window.location.href='c_shop.html?macno='+getUrlParam('macno');
+                       },2000);
+                    }else{
+                        onOff=0;
+                    }
+                    dlctipbox.show(res.msg);
+                });
+            }
+        });
+        var onOff1 = 0;
+        $(".yanzheng").click(function(){
+            var phone = $('#phone').val();
+            if(isNull(phone)){
+                dlctipbox.show('请输入手机号码');
+            }else if(!checkMobileAndTel(phone)){
+                dlctipbox.show('手机号码格式不正确');
+            }else{
+                if(onOff1)return false;
+                onOff1 = 1;
+                dlc_request('/Wxsite/MylGoods/api',{'api_name':'send_code','mobile':phone},function(res){
+                    console.log(res);
+                    if(res.code==1){
+                        var second = 60;
+                        var t = setInterval(function() {
+                            if(second <= 0) {
+                                second = 0;
+                                $(".yanzheng").text("重发验证码");
+                                clearInterval(t);
+                                onOff1 = 0;
+                            } else {
+                                second--;
+                                $(".yanzheng").text(second + "秒后重发");
+                            }
+                        }, 1000);
+                    }else{
+                        onOff1 = 0;
+                    }
+                    dlctipbox.show(res.msg);
+                });
+            }
+        });
+    });
+</script>

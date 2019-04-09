@@ -1,0 +1,91 @@
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+	</head>	
+	<body>
+		<!-- form id='alipaysubmit' name='alipaysubmit' action='https://openapi.alipay.com/gateway.do?charset=utf-8' method='POST'><input type='hidden' name='biz_content' value='{"body":"sdafdf","subject":"sadfsdf","out_trade_no":"2012346564589674456","timeout_express":"30m","total_amount":0.01,"product_code":"QUICK_WAP_WAY"}'/><input type='hidden' name='app_id' value='2017121900983087'/><input type='hidden' name='version' value='1.0'/><input type='hidden' name='format' value='json'/><input type='hidden' name='sign_type' value='RSA'/><input type='hidden' name='method' value='alipay.trade.wap.pay'/><input type='hidden' name='timestamp' value='2018-01-29 17:26:41'/><input type='hidden' name='alipay_sdk' value='alipay-sdk-php-20161101'/><input type='hidden' name='notify_url' value='http://pudishj.app.xiaozhuschool.com/Wxsite/Alipay/alipayNotify/'/><input type='hidden' name='charset' value='utf-8'/><input type='hidden' name='sign' value='Ss4hG61cPsZ52NHSNudep0rBdfPpyebfcbvUwrrawxlZuMC/lIfG3BXsldndcNGvVi/Bl0EElvuCiKOzgKywfmaHZHwySkixT7hbUGCMG9A2BTEaIBcTOWt5QSJCNjrMxrAi8cGS2lSJNBVWlhiW5AOTGPjSQQR53coMcCjHzuU='/><input type='submit' value='ok' style='display:none;''></form> -->
+		<div id="alipayForm"></div>
+		<div class="wrapper buy-wrapper">
+                <a href="javascript:void(0);"
+                   class="J-btn-submit btn mj-submit btn-strong btn-larger btn-block">确认支付</a>
+            </div>
+		<script src="../js/jquery-1.8.3.min.js"></script>
+<script src="../js/swiper.min.js"></script>
+<script src="../js/jquery.fly.min.js"></script>
+<script src="../js/dlc.js"></script>
+<script src="../js/Tdrag.min.js"></script>
+<script src="../../../ap.js"></script>
+<script>
+	$(function(){
+		$('.btn').click(function(){
+			// var queryParam = '';
+	  //       Array.prototype.slice.call(document.querySelectorAll("input[type=hidden]")).forEach(function (ele) {
+	  //           queryParam += '&' + ele.name + "=" + encodeURIComponent(ele.value);
+	  //       });
+
+	  //       var url = document.getElementsByName("alipaysubmit")[0].action+''+queryParam;
+	  //       _AP.pay(url);
+
+
+	        dlc_request('/Wxsite/Alipay/wappay',function(res){
+	                    alert(JSON.stringify(res));
+                        // return false;
+	                    dlctipbox.clear();
+	                    if(res.code==1){
+	                    	alert(1);
+                            // var bizStr = JSON.stringify(res.data.biz_content);
+                            // $('input[name="sign"]').val(res.data.sign);
+                            // $('input[name="bizcontent"]').val(bizStr);
+                            // $('input[name="sign_type"]').val(res.data.sign_type);
+                            // $('input[name="charset"]').val(res.data.charset);
+                            // $('input[name="app_id"]').val(res.data.app_id);
+                            // $('input[name="method"]').val(res.data.method);
+                            // $('input[name="version"]').val(res.data.version);
+                            // $('input[name="timestamp"]').val(res.data.timestamp);
+                            // $('input[name="notify_url"]').val(res.data.notify_url);
+                            // $('input[name="format"]').val(res.data.format);
+                            // $('input[name="alipay_sdk"]').val(res.data.alipay_sdk);
+                            var form = res.data; 
+
+                            $("#alipayForm").append(form);
+                            $("#alipayForm script").remove(); 
+                            var queryParam = '';
+                            Array.prototype.slice.call(document.querySelectorAll("input[type=hidden]")).forEach(function (ele) {
+                                queryParam += '&' + ele.name + "=" + encodeURIComponent(ele.value);
+                            });
+
+                            var url = document.getElementsByName("alipaysubmit")[0].action+''+queryParam;
+                            alert(url);
+                            _AP.pay(url);
+	                    }
+	                })
+
+
+	        // $.ajax({
+	        // 	type:'post',
+	        // 	url:'/Wxsite/Alipay/wappay',
+	        // 	dataType:'json',
+	        // 	success:function(res){
+	        // 		if(res.code==1){
+	        // 			alert(JSON.stringify(res.data))
+	        // 			var form = res.data; 
+
+         //                    $("#alipayForm").append(form);
+         //                    $("#alipayForm script").remove(); 
+         //                    var queryParam = '';
+         //                    Array.prototype.slice.call(document.querySelectorAll("input[type=hidden]")).forEach(function (ele) {
+         //                        queryParam += '&' + ele.name + "=" + encodeURIComponent(ele.value);
+         //                    });
+
+         //                    var url = document.getElementsByName("alipaysubmit")[0].action+''+queryParam;
+         //                    alert(url);
+         //                    _AP.pay(url);
+	        // 		}
+	        // 	}
+	        // })
+		})
+		
+	})
+</script>
+	</body>
+</html>

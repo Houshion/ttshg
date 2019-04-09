@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="viewport" content="width=device-width,target-densitydpi=high-dpi,initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <meta name="format-detection" content="telephone=no, email=no">
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+    <meta http-equiv="Cache-Control" content="no-cache" />
+    <!--设置存缓-->
+    <!-- css -->
+    <link rel="stylesheet" href="../css/reset.css">
+    <title>个人中心</title>
+    <!-- 设置rem -->
+    <script type="text/javascript" src="../js/adaptive.js"></script>
+    <script>
+    window['adaptive'].desinWidth = 750;
+    window['adaptive'].baseFont = 28;
+    window['adaptive'].init();
+    </script>
+    <style>
+        .img{
+            width: 1.8rem;height: 1.5rem
+        }
+        .message span{
+            width: 1.5rem;display: inline-block;
+        }
+    </style>
+</head>
+
+<body class="bc-gray">
+    <!--    <header>
+       <img src="../img/left.png" style="width: 0.25rem">
+       <span>订单详情</span>
+       <span></span>
+   </header> -->
+    <div class="">
+        <div class="height7 paddlr20 c999" style="display: flex;align-items: center;" id="status">
+            <!--<img src="" style="width: 0.35rem;">-->
+            <!--<span class="margin-left-10" id="type"></span>-->
+        </div>
+        <div class="paddlr20 bc-fff">
+            <ul id="goods_list">
+                <li class="space_between border-bottom paddtb20">
+                    <div style="display: flex;">
+                        <img src="../img/bg1.png" class="img">
+                        <dl class="space_between_col margin-left-20">
+                            <dt class="font32 blod">美国筋口牛秋</dt>
+                            <dd class="c999">￥<i>20</i></dd>
+                        </dl>
+                    </div>
+                    <span class="c999">x <i>1</i></span>
+                </li>
+                <li class="space_between border-bottom paddtb20">
+                    <div style="display: flex;">
+                        <img src="../img/bg1.png" class="img">
+                        <dl class="space_between_col margin-left-20">
+                            <dt class="font32 blod">美国筋口牛秋</dt>
+                            <dd class="c999">￥<i>20</i></dd>
+                        </dl>
+                    </div>
+                    <span class="c999">x <i>1</i></span>
+                </li>
+            </ul>
+            <p class="height8 tr c999  border-bottom">共<i id="count_num"></i>件商品 合计：￥<i id="count_price"></i></p>
+            <div class="space_between height8">
+                <span>实付款<i id="pay_type"></i></span>
+                <span class="red">￥<i id="pay_count_price"></i></span>
+            </div>
+        </div>
+        <div class="bc-fff paddlr20 c999 message margin-top-20" id="msg">
+            <!--<p class="height7"><span>订单编号</span><i class="c333">1748787</i></p>-->
+            <!--<p class="height7"><span>交易号</span><i class="c333">CD98798748978</i></p>-->
+            <!--<p class="height7"><span>创建时间</span><i class="c333">2017.10.10 11:50</i></p>-->
+            <!--<p class="height7"><span>付款时间</span><i class="c333">2017.10.10 12:00</i></p>-->
+        </div>
+        <div class="paddlr20 bc-fff margin-top-20 height8" id="serviceMobile"><a>联系客服：</a></div>
+    </div>
+</body>
+
+</html>
+<script src="../js/jquery-1.8.3.min.js"></script>
+<script src="../js/dlc.js"></script>
+<script>
+    $(function(){
+       dlc_request('/Wxsite/MgyOrder/api',{'api_name':'Details','id':getUrlParam('id')},function(res){
+           console.log(res);
+            if(res.code==1){
+                var res = res.data;
+                var str='';
+                var goods = res.good;
+                for(var i in goods){
+                    str+='<li class="space_between border-bottom paddtb20">'+
+                            '<div style="display: flex;">'+
+                            '<img src="'+goods[i].goods_img+'" class="img">'+
+                            '<dl class="space_between_col margin-left-20">'+
+                            '<dt class="font32 blod">'+goods[i].goods_name+'</dt>'+
+                            '<dd class="c999">￥<i>'+goods[i].goods_price+'</i></dd>'+
+                            '</dl>'+
+                            '</div>'+
+                            '<span class="c999">&times;<i>'+goods[i].goods_num+'</i></span>'+
+                            '</li>';
+                }
+                $('#goods_list').html(str);
+                $('#count_num').text(res.count_num);
+                $('#count_price').text(res.count_price);
+                $('#msg').html('<p class="height7"><span>订单编号</span><i class="c333">'+res.oid+'</i></p>'+
+                        '<p class="height7"><span>交易号</span><i class="c333">'+res.deal_id+'</i></p>'+
+                        '<p class="height7"><span>创建时间</span><i class="c333">'+format(res.ctime,'Y-m-d H:i:s')+'</i></p>'+
+                        '<p class="height7"><span>出货时间</span><i class="c333">'+(res.clear_time!=0?format(res.clear_time,'Y-m-d H:i:s'):'未出货')+'</i></p>');
+                $('#status').html(res.type==1?'<img src="../img/fail.png" style="width: 0.35rem;"><span class="margin-left-10" id="type">未完成</span>':res.type==4?'<img src="../img/fail.png" style="width: 0.35rem;"><span class="margin-left-10" id="type">已付款</span>':'<img src="../img/success.png" style="width: 0.35rem;"><span class="margin-left-10" id="type">已完成</span>');
+                $('#pay_count_price').text(res.pay_count_price);
+                $('#pay_type').text(res.pay_type==1?'(微信支付)':res.pay_type==2?'(支付宝支付)':'(现金支付)');
+            }else{
+                dlctipbox.show(res.msg);
+            }
+       });
+        dlc_request('/Wxsite/MylGoods/api',{'api_name':'serviceMobile'},function(res){
+            console.log(res);
+            if(res.code==1){
+                $('#serviceMobile').html(res.data?'<a href="tel:'+res.data+'">联系客服：'+res.data+'</a>':'<a>联系客服:暂无设置服务电话</a>');
+            }else{
+                dlctipbox.show(res.msg);
+            }
+        });
+    });
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

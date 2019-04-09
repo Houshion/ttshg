@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="viewport" content="width=device-width,target-densitydpi=high-dpi,initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <meta name="format-detection" content="telephone=no, email=no">
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <!--以全屏模式运行-->
+    <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+    <meta http-equiv="Cache-Control" content="no-cache" />
+    <!--设置存缓-->
+    <!-- css -->
+    <link rel="stylesheet" href="../css/reset.css">
+    <title>订单管理</title>
+    <!-- js -->
+    <script type="text/javascript" src="../js/adaptive.js"></script>
+    <script>
+    window['adaptive'].desinWidth = 750;
+    window['adaptive'].baseFont = 28;
+    window['adaptive'].init();
+    </script>
+    <style>
+    .active {
+        color: #e27e20;
+        border-bottom: 2px solid #e27e20
+    }
+
+    .head {
+        display: flex;
+        align-items: center;
+        height: 1.0rem;
+        background: #fff
+    }
+
+    .head p {
+        flex: 1;
+        text-align: center;
+        background: #fff;
+        height: 100%;
+        line-height: 1.0rem;
+        margin: 0 0.50rem;
+        box-sizing: border-box;
+    }
+
+    #con_menu_1 li,
+    #con_menu_2 li,
+    #con_menu_3 li {
+        background: #fff;
+        padding: 0 0.24rem;
+        margin-bottom: 0.24rem
+    }
+
+    .congimg {
+        width: 1.68rem;
+        height: 1.20rem;
+        margin-right: 0.25rem
+    }
+    </style>
+</head>
+
+<body class="bc-gray conTent">
+    <div class="head">
+        <p class="tab_item active">全部</p>
+        <p class="tab_item">未完成</p>
+        <p class="tab_item">已完成</p>
+    </div>
+    <div class="flex1" style="overflow-y: scroll;">
+        <ul class="list">
+            <!--<li class="margin-top-20 bc-fff paddlr20">-->
+                <!--<div class="border-bottom space_between paddtb20">-->
+                    <!--<div>-->
+                        <!--<span>订单编号：41646464646</span>-->
+                        <!--</div>-->
+                    <!--<p class="red">未完成</p>-->
+                <!--</div>-->
+                <!--<div class="border-bottom paddtb20 space_between" >-->
+                    <!--<div style="display:flex"><img src="../img/bg1.png" class="congimg">-->
+                    <!--<div class="space_between_col"><span>酸菜牛肉面</span><span class="c999">￥20.00</span></div>-->
+                    <!--</div><p>&times;<i>1</i></p>-->
+                <!--</div>-->
+                <!--<div class="border-bottom paddtb20 space_between" >-->
+                    <!--<div style="display:flex"><img src="../img/bg1.png" class="congimg">-->
+                        <!--<div class="space_between_col"><span>酸菜牛肉面</span><span class="c999">￥20.00</span></div>-->
+                    <!--</div><p>&times;<i>1</i></p>-->
+                <!--</div>-->
+                <!--<div class=" height8 tr">共<i>1</i>件商品 合计￥20</div>-->
+            <!--</li>-->
+        </ul>
+    </div>
+    <div class="btn">积分记录</div>
+</body>
+<script src="../js/jquery-1.8.3.min.js"></script>
+<script type="text/javascript" src="../js/dlc.js"></script>
+<script>
+    $(function(){
+        var type = 0;
+        init_list();
+        function init_list(){
+            dlctipbox.loading('请稍后...');
+            dlc_request('/Wxsite/MgyOrder/api',{'api_name':'orderList','type':type,'page':1,'pagesize':9999},function(res){
+                console.log(res);
+                dlctipbox.clear();
+                if(res.code==1){
+                    var res = res.data;
+                    var str='';
+                    for(var i in res){
+                        str+='<li class="margin-top-20 bc-fff paddlr20" data-id="'+res[i].order_id+'">'+
+                                '<div class="border-bottom space_between paddtb20">'+
+                                '<div>'+
+                                '<span>订单编号：'+res[i].oid+'</span>'+
+                        '</div>'+
+                        '<p class="red">'+(res[i].type==1?'未完成':res[i].type==4?"已付款":res[i].type==3?'已完成':'')+'</p>'+
+                                '</div>';
+                        for(var j in res[i].good){
+                            str+= '<div class="border-bottom paddtb20 space_between" >'+
+                                    '<div style="display:flex"><img src="'+res[i].good[j].goods_img+'" class="congimg">'+
+                                    '<div class="space_between_col"><span>'+res[i].good[j].goods_name+'</span><span class="c999">￥'+res[i].good[j].goods_price+'</span></div>'+
+                                    '</div><p>&times;<i>'+res[i].good[j].goods_num+'</i></p>'+
+                                    '</div>';
+                        }
+                        str+='<div class=" height8 tr">共<i>'+res[i].count_num+'</i>件商品 合计￥'+res[i].count_price+'</div>'+
+                        '</li>';
+                    }
+                    if(str){$('.list').html(str)}else{$('.list').html(emptyTip('暂无订单'))};
+                }else{
+                    dlctipbox.show(res.msg);
+                }
+            });
+        };
+        $('.tab_item').click(function(){
+            if($(this).index()==0){type=0}else if($(this).index()==1){type=1}else if($(this).index()==2){type=3}
+            console.log(type);
+            init_list();
+            $(this).addClass('active').siblings().removeClass('active');
+        });
+        $(".btn").click(function() {
+            window.location.href = 'c_myPoint.html'
+        });
+        $('.list').on('click','li',function(){
+            console.log($(this).data('id'));
+            location.href = './c_orderDelites_fail.html?id='+$(this).data('id');
+        });
+    });
+</script>
+
+</html>

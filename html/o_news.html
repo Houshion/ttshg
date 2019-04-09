@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+
+    <head>
+        <title></title>
+        <meta charset="UTF-8">
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+        <meta name="viewport" content="width=device-width,target-densitydpi=high-dpi,initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+        <meta name="format-detection" content="telephone=no, email=no">
+        <meta name="apple-mobile-web-app-capable" content="yes" />
+        <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+        <meta http-equiv="Cache-Control" content="no-cache" />
+        <link rel="stylesheet" href="../css/o_base.css">
+        <link rel="stylesheet" href="../css/o_style.css">
+        <link rel="stylesheet" href="../css/layui.css">
+        <link rel="stylesheet" href="../css/layer.css">
+    </head>
+    <body>
+        <div id="news">
+
+        </div>
+    </body>
+    <script src="../js/o_base.js"></script>
+    <script src="../js/jquery-1.11.1.min.js"></script>
+    <script src="../js/layui.all.js"></script>
+    <script src="../js/layer.js"></script>
+    <script src="../js/Unix.js"></script>
+    <script>
+        $(function () {
+
+            getList();
+
+            $("#news").on("click",".newsList",function () {
+                var id = $(".newsList").data("id");
+                goTo("./o_newsDetail.html","id="+id);
+            });
+
+            function getList(){
+                var param = {api_name:"newsList"};
+                var url = "News/api";
+                ajaxPost(param, url, function(datas) {
+                    var data = datas.data;
+
+                    if(data.length == 0){
+                        $("#news").prepend("<div class='ta-center'>..暂无数据..</div>");
+                        return false;
+                    }
+
+                    var str = "";
+                    for(var i = 0; i < data.length; i++){
+
+                        var time = date('Y-m-d H:i', data[i].ctime);
+                        str += '<div class="newsList flex radius5 mg-15 border-b" data-id="'+data[i].news_id+'">'+
+                                    '<div class="flex flexWrap flexA-between pd-15 left wd-100">'+
+                                        '<div class="title wd-100">'+data[i].title+'</div>'+
+                                        '<div class="time wd-100 col_gray ta-right">'+time+'</div>'+
+                                    '</div>'+
+                                '</div>';
+                    }
+                    $("#news").prepend(str);
+                }, function (error) {
+                    layer.open({
+                        content: error,
+                        skin: 'msg',
+                        time: 2 //2秒后自动关闭
+                    });
+                });
+            }
+        })
+    </script>
+</html>

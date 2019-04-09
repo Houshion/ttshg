@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="viewport" content="width=device-width,target-densitydpi=high-dpi,initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <meta name="format-detection" content="telephone=no, email=no">
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+    <meta http-equiv="Cache-Control" content="no-cache" />
+    <!--设置存缓-->
+    <!-- css -->
+    <link rel="stylesheet" href="../css/reset.css">
+    <link rel="stylesheet" href="../css/swiper.min.css">
+    <title>记录详情</title>
+    <!-- 设置rem -->
+    <script type="text/javascript" src="../js/adaptive.js"></script>
+    <script>
+    window['adaptive'].desinWidth = 750;
+    window['adaptive'].baseFont = 28;
+    window['adaptive'].init();
+    </script>
+    <style>
+        .details_box img{width: 1.5rem;height: 1.5rem;margin-right: .1rem;}
+    </style>
+</head>
+<body class="bc-gray">
+    <!--<div class="bc-fff padd20 details_box">-->
+        <!--<div>记录详情记录详情记录详情记录详情记录详情记录详情记录详情</div>-->
+        <!--<img src="../img/bg1.png" class="margin-top-20">-->
+    <!--</div>-->
+    <!--<div class="height8 bc-fff space_between margin-top-20 paddlr20">-->
+        <!--<div>-->
+            <!--<img src="../img/ren.png" style="width: 0.35rem">-->
+            <!--<span class="margin-left-20">陈跳跳</span>-->
+        <!--</div>-->
+        <!--<span class="c999">2018.10.12</span>-->
+    <!--</div>-->
+</body>
+
+</html>
+<script src="../js/jquery-1.8.3.min.js"></script>
+<script src="../js/dlc.js" type="text/javascript" charset="utf-8"></script>
+<script>
+    $(function(){
+        dlctipbox.loading('请稍后...');
+        dlc_request('/Wxsite/Lqsdevice/api',{'api_name':'unusual_details','device_unusual_id':getUrlParam('id')},function(res){
+            console.log(res);
+            dlctipbox.clear();
+            if(res.code==1){
+                var res = res.data;
+                var str=' <div class="bc-fff padd20 details_box">'+
+                        '<div>'+res.reason+'</div>';
+                for(var i in res.img){
+                    str+= '<img src="'+res.img[i]+'" class="margin-top-20">';
+                }
+                str+='</div>'+
+                '<div class="height8 bc-fff space_between margin-top-20 paddlr20">'+
+                '<div>'+
+                '<img src="../img/ren.png" style="width: 0.35rem">'+
+                '<span class="margin-left-20">'+res.user_name+'</span>'+
+                '</div>'+
+                '<span class="c999">'+format(res.ctime,'Y-m-d H:i:s')+'</span>'+
+        '</div>';
+                $('body').html(str);
+            }else{
+                dlctipbox.show(res.msg);
+            }
+        });
+    });
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

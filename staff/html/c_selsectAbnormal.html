@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="viewport" content="width=device-width,target-densitydpi=high-dpi,initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <meta name="format-detection" content="telephone=no, email=no">
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+    <meta http-equiv="Cache-Control" content="no-cache" />
+    <!--设置存缓-->
+    <!-- css -->
+    <link rel="stylesheet" href="../css/reset.css">
+    <link rel="stylesheet" href="../css/swiper.min.css">
+    <title>选择商品</title>
+    <!-- 设置rem -->
+    <script type="text/javascript" src="../js/adaptive.js"></script>
+    <script>
+    window['adaptive'].desinWidth = 750;
+    window['adaptive'].baseFont = 28;
+    window['adaptive'].init();
+    </script>
+    <style>
+    .search {
+        border: 1px solid #eee;
+        border-radius: 0.08rem;
+        width: calc( 100% - 0.7rem);
+        padding-left: 0.7rem;
+        background: url(../img/search.png) 0.2rem center no-repeat;
+        background-size: 5%
+    }
+
+
+    .label {
+        display: flex;
+        align-items: center;
+        height: 2.0rem;
+        padding: 0.2rem 0.20rem;
+        border-bottom: 1px solid #eee;
+    }
+    </style>
+</head>
+
+<body class="bc-gray conTent">
+    <div class="bc-fff padd20" style="overflow: hidden;">
+        <input type="search" class="search" placeholder="请输入关键字搜索" id="search">
+    </div>
+    <div class=" flex1 margin-top-20 " style="overflow-y: scroll;" id="list">
+        <!--<label class="label bc-fff ">-->
+            <!--<input type="radio" hidden name="select">-->
+            <!--<cite></cite>-->
+            <!--<img src="../img/bg1.png" class="margin-left-20" style="width: 2rem;height: 1.5rem">-->
+            <!--<span class="margin-left-20">名称</span>-->
+        <!--</label>-->
+        <!--<label class="label bc-fff ">-->
+            <!--<input type="radio" hidden name="select">-->
+            <!--<cite></cite>-->
+            <!--<img src="../img/bg1.png" class="margin-left-20" style="width: 2rem;height: 1.5rem">-->
+            <!--<span class="margin-left-20">名称</span>-->
+        <!--</label>-->
+    </div>
+    <div class="btn">确定</div>
+</body>
+
+</html>
+<script src="../js/jquery-1.8.3.min.js"></script>
+<script src="../js/dlc.js" type="text/javascript" charset="utf-8"></script>
+<script>
+    $(function(){
+        $(".btn").click(function() {
+            var goods_id = $('input[name=select]:checked').val();
+            if(goods_id){
+                location.href = './c_addShop.html?macno='+getUrlParam('macno')+'&goods_id='+goods_id+'&device_goods_id='+getUrlParam('id');
+            }else{
+                dlctipbox.show('请选择商品');
+            }
+        });
+        //获取商品列表
+        init_list();
+        function init_list(searchName){
+            dlctipbox.loading('请稍后...');
+            searchName = searchName?searchName:'';
+            dlc_request('Wxsite/XlEquipment/api',{'api_name':'goodsDetail','macno':getUrlParam('macno'),'page':1,'size':9999,'search':searchName},function(res){
+                console.log(res);
+                dlctipbox.clear();
+                if(res.code == 1){
+                    var res = res.data;
+                    var str = '';
+                    for(var i in res){
+                        str+='<label class="label bc-fff ">'+
+                                '<input type="radio" hidden name="select" value="'+res[i].goods_id+'">'+
+                                '<cite></cite>'+
+                                '<img src="'+res[i].img+'" class="margin-left-20" style="width: 2rem;height: 1.5rem">'+
+                                '<span class="margin-left-20">'+res[i].title+'</span>'+
+                                '</label>';
+                    }
+                    str=str?str:emptyTip('查无商品');
+                    $('#list').html(str);
+                }else{
+                    dlctipbox.show(res.msg);
+                }
+            });
+        };
+        $("#search").on('keypress', function (e) {
+            var keycode = e.keyCode;
+            if (keycode == '13') {
+                var searchName = $(this).val();//关键词，空搜全部
+                init_list(searchName);
+            }
+        });
+    });
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

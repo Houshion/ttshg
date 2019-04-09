@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="viewport" content="width=device-width,target-densitydpi=high-dpi,initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <meta name="format-detection" content="telephone=no, email=no">
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+    <meta http-equiv="Cache-Control" content="no-cache" />
+    <!--设置存缓-->
+    <!-- css -->
+    <link rel="stylesheet" href="../css/reset.css">
+    <link rel="stylesheet" href="../css/swiper.min.css">
+    <title>新增记录</title>
+    <!-- 设置rem -->
+    <script type="text/javascript" src="../js/adaptive.js"></script>
+    <script>
+    window['adaptive'].desinWidth = 750;
+    window['adaptive'].baseFont = 28;
+    window['adaptive'].init();
+    </script>
+    <style>
+
+    </style>
+</head>
+
+<body>
+<form action="#" enctype="multipart/form-data" method="post" name="form" id="form">
+    <textarea  placeholder="请输入内容" id="reason" name="reason"></textarea>
+    <div class="border-bottom"></div>
+    <div class="footer padd20" id="pic_box">
+        <label class="up_pic">
+            <input type="file" hidden="hidden" name="img" onchange="upLoadImg(this,'pic_box',5)" class="img"/>
+        </label>
+    </div>
+    <input type="hidden" hidden name="api_name" value="add_unusual"/>
+    <input type="hidden" hidden name="device_id" value=""/>
+</form>
+    <div class="btn">提交</div>
+</body>
+</html>
+<script src="../js/jquery-1.8.3.min.js"></script>
+<script src="../js/dlc.js" type="text/javascript" charset="utf-8"></script>
+<script src="../js/jquery.form.js"></script>
+<script>
+    $(function(){
+        form.device_id.value = getUrlParam('device_id');
+        $('.btn').click(function(){
+            $('.img').each(function(index){
+                $(this).attr('name','img'+(index+1));
+            });
+            $('#form').ajaxSubmit({
+                url:dlcUrl()+'Wxsite/Lqsdevice/api',
+                type : 'POST',
+                dataType:  'json',
+                beforeSubmit:function(){
+                    var reason = $('#reason').val();
+                    if(form.device_id){
+                        if(isNull(reason)){
+                            dlctipbox.show('请输入内容');
+                            return false;
+                        }else if($('#pic_box').find('.isImg').length==0){
+                            dlctipbox.show('请上传图片');
+                            return false;
+                        }else{
+                            dlctipbox.loading('请稍后...');
+                        }
+                    }else{
+                        return false;
+                    }
+                },
+                success:function(res){
+                    console.log(res);
+                    dlctipbox.clear();
+                    if(res.code==1){
+                       setTimeout(function(){
+                           history.go(-1);
+                       },1000);
+                    }
+                    dlctipbox.show(res.msg);
+                },
+                error: function(err){
+
+                }
+            })
+        });
+    });
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+

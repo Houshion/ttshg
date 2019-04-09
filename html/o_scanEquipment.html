@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+
+    <head>
+        <title>设备补货</title>
+        <meta charset="UTF-8">
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+        <meta name="viewport" content="width=device-width,target-densitydpi=high-dpi,initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+        <meta name="format-detection" content="telephone=no, email=no">
+        <meta name="apple-mobile-web-app-capable" content="yes" />
+        <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+        <meta http-equiv="Cache-Control" content="no-cache" />
+        <link rel="stylesheet" href="../css/o_base.css">
+        <link rel="stylesheet" href="../css/o_style.css">
+        <link rel="stylesheet" href="../css/layui.css">
+        <link rel="stylesheet" href="../css/layer.css">
+    </head>
+    <body>
+        
+    </body>
+    <script src="../js/o_base.js"></script>
+    <script src="../js/jquery-1.11.1.min.js"></script>
+    <script src="../js/layui.all.js"></script>
+    <script src="../js/layer.js"></script>
+    <script>
+        dlc_request('/yzshg/index/index',{api_name:'get_jsapi'},function(res){
+            console.log(res);
+            if(res.code == 1){
+                var ticket = wx_js(res.data.ticket,res.data.timestamp,res.data.nonceStr);
+                wx.config({
+                    debug: false, // 开启调试模式,调用的所有api的返回值会在客户端//alert出来，若要查看传入的参数，可以在pc端打开，参数信息会通过log打出，仅在pc端时才会打印。
+                    appId: res.data.appId, // 必填，公众号的唯一标识
+                    timestamp: res.data.timestamp, // 必填，生成签名的时间戳
+                    nonceStr:  res.data.nonceStr, // 必填，生成签名的随机串
+                    signature: ticket ,// 必填，签名，见附录1
+                    jsApiList: ['checkJsApi',
+                        'onMenuShareTimeline',
+                        'onMenuShareAppMessage',
+                        'onMenuShareQQ',
+                        'onMenuShareWeibo',
+                        'hideMenuItems',
+                        'showMenuItems',
+                        'hideAllNonBaseMenuItem',
+                        'showAllNonBaseMenuItem',
+                        'translateVoice',
+                        'startRecord',
+                        'stopRecord',
+                        'onRecordEnd',
+                        'playVoice',
+                        'pauseVoice',
+                        'stopVoice',
+                        'uploadVoice',
+                        'downloadVoice',
+                        'chooseImage',
+                        'previewImage',
+                        'uploadImage',
+                        'downloadImage',
+                        'getNetworkType',
+                        'openLocation',
+                        'getLocation',
+                        'hideOptionMenu',
+                        'showOptionMenu',
+                        'closeWindow',
+                        'scanQRCode',
+                        'chooseWXPay',
+                        'openProductSpecificView',
+                        'addCard',
+                        'chooseCard',
+                        'openCard'] // 必填，需要使用的JS接口列表，所有JS接口列表见附录2
+                });
+                wx.ready(function(){
+                    wx.scanQRCode({
+                        needResult: 0, // 默认为0，扫描结果由微信处理，1则直接返回扫描结果，
+                        scanType: ["qrCode","barCode"], // 可以指定扫二维码还是一维码，默认二者都有
+                        success: function (res) {
+//									alert(JSON.stringify(res));
+//                            location.href =res.resultStr; // 当needResult 为 1 时，扫码返回的结果
+                        },
+                        error:function(err){
+                            alert(JSON.stringify(err));
+                        }
+                    });
+//							setInterval(function(){
+//								WeixinJSBridge.call('closeWindow');
+//							}, 50);
+                })
+            }else{
+                //hideLoading();
+                console.log(res.msg);
+            }
+        })
+    </script>
+</html>

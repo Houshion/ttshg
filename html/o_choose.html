@@ -1,0 +1,523 @@
+<html>
+
+<head>
+    <title>选择商品</title>
+    <meta charset="UTF-8">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="viewport" content="width=device-width,target-densitydpi=high-dpi,initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <meta name="format-detection" content="telephone=no, email=no">
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+    <meta http-equiv="Cache-Control" content="no-cache" />
+    <link rel="stylesheet" href="../css/o_base.css">
+    <link rel="stylesheet" href="../css/o_style.css">
+    <link rel="stylesheet" href="../css/layui.css">
+    <link rel="stylesheet" href="../css/layer.css">
+    <!-- 设置rem -->
+    <script type="text/javascript" src="../js/adaptive.js"></script>
+    <script>
+        window['adaptive'].desinWidth = 750;
+    window['adaptive'].baseFont = 28;
+    window['adaptive'].init();
+    </script>
+    <style>
+        .swiper-container {
+        width: 100%;
+        height: 3.8rem;
+    }
+
+    .swiper-slide img{
+        height: 3.8rem;
+        width: 100%;
+    }
+
+    .foot {
+
+        display: flex;
+        width: 100%;
+        position: fixed;
+        bottom: 0;
+        background: #fff;
+    }
+
+    .abs {
+        width: 0.32rem;
+        line-height: 0.32rem;
+        color: #fff;
+        background: #e27e20;
+        border-radius: 1.0rem;
+        text-align: center;
+        right: 9px;
+        top: -3px;
+        z-index: 999;
+    }
+
+    /* .img {
+        width: 1.11rem;
+        line-height: 1.11rem;
+        border-radius: 1.11rem;
+    } */
+
+    .goPay span {
+        color: #fff;
+        height: 100%;
+        text-align: center;
+    }
+
+    .list {
+
+        justify-content: space-between;
+        color: #999
+    }
+
+    /* .list img {
+        width: 2.0rem;
+        height: 1.5rem
+    } */
+
+    .list p {
+        width: 0.5rem;
+        height: 0.5rem;
+        border: 1px solid #eee;
+        border-radius: 0.08rem;
+        text-align: center;
+        display: inline-block;
+        font-size: .4rem;
+        line-height: .5rem;
+    }
+
+    .list span {
+        width: 0.45rem;
+        text-align: center;
+        display: inline-block;
+    }
+
+    .zhezhaobox img {
+        width: 0.56rem;
+        margin-right: 0.4rem
+    }
+    .zhezhaobox{background: transparent;height: auto;}
+    .order {
+        width: 1.5rem;
+        position: fixed;
+        bottom: 1.8rem;
+        right: 0.1rem;
+    }
+    .flex_a{display: flex;align-items: center;}
+    .flex_aj{display: flex;align-items: center;justify-content: center;}
+    .order{bottom: 1.2rem;}
+    #jf{overflow: hidden;text-overflow:ellipsis;white-space: nowrap;}
+    .tip{background: rgba(0,0,0,.5);display:flex;align-items:center;font-size:.28rem;position: absolute;bottom: 0;left: 0;width: 100%;z-index: 1000;line-height: .6rem;padding: 0 .24rem;color: #fff;}
+    </style>
+    <style>
+        .img img {
+            width: 40px;
+        }
+
+        .payBox {
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+            z-index: 99;
+        }
+
+        .payBox .title,
+        .payBox .list {
+            background: #ffffff;
+            border-bottom: #e1e1e1 1px solid
+        }
+
+        .payBox .cancel {
+            background: #fdbe63;
+            color: #ffffff
+        }
+
+        .payBox .list {
+            padding: 15px;
+            text-align: center;
+        }
+
+        .payBox .content {
+            background: #efeff4
+        }
+	    </style>
+</head>
+
+<body>
+    <div id="title">
+        <div class="ta-center font16 pd-25 col_gray">甜甜科技</div>
+        <div class="ta-center font16">请输入货架上对应商品编号</div>
+    </div>
+    <div id="main" class="pd-10">
+        <div class="flex flexCenter search radius5 mg-auto">
+            <input type="number" class="input wd-75 radius5 pd-15">
+            <div class="wd-25 ta-center button btn">确定</div>
+        </div>
+    </div>
+
+    <div id="list" class="mg-b-55">
+
+    </div>
+    <div id="foot" class="flex">
+        <div class="wd-70 pay_message pd-l-10">
+            合计：
+            <span class="col_yellow">￥
+                <b>0.00</b>
+            </span>
+        </div>
+        <button class="wd-30 pay_btn ta-center btn" style="outline: none;border: none;">结算</button>
+    </div>
+    <!-- <div class="hide">
+        <div class="mask"></div>
+        <div class="payWay bcol_white wd-100">
+            <div class="title ta-center font26 pd-15">支付方式</div>
+            <div class="main">
+                <div class="flex flexWrap Wx">
+                    <img class="wd-10" src="../img/i_unselect.png" alt="">
+                    <div class="wd-30">
+                        <img src="../img/wx.png" alt=""> 微信支付
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div> -->
+    <div class="payBox hide">
+        <div class="content">
+            <div class="title ta-center font26 pd-15">支付方式</div>
+            <div class="list wxpay">
+                <div class="flex">
+                    <div class="img">
+                        <img src="../img/wx.png" alt="">
+                    </div>
+                    <div class="box mg-l-10">微信支付</div>
+                </div>
+            </div>
+            <div class="list alipay">
+                <div class="flex">
+                    <div class="img">
+                        <img src="../img/alipay.png" alt="">
+                    </div>
+                    <div class="box mg-l-10">支付宝支付</div>
+                </div>
+            </div>
+            <div class="cancel ta-center pd-15 mg-t-15">
+                取消
+            </div>
+        </div>
+    </div>
+    <div id="alipayForm" style="display:none"></div>
+</body>
+<script src="../js/o_base.js"></script>
+<script src="../js/jquery-1.11.1.min.js"></script>
+<script src="../js/layui.all.js"></script>
+<script src="../js/layer.js"></script>
+<script src="../js/dlc.js"></script>
+<script src="../js/Tdrag.min.js"></script>
+<script src="../js/ap.js"></script>
+<script>
+    $(function () {
+
+        count();
+        // 提交支付信息
+        var jsApiParameters = {};
+        var goodsList = [];
+
+        $(".button").on("click", function () {
+
+            var macno = getUrlParam('macno');
+            var number = $(".input").val();
+
+            if (number == "") {
+                layer.open({
+                    content: '请输入商品编号',
+                    skin: 'msg',
+                    time: 2 //2秒后自动关闭
+                });
+                return false;
+            }
+
+            var param = {
+                api_name: "commodityList",
+                macno: macno,
+                number: number
+            }
+            var url = "MylGoods/api";
+
+            ajaxPost(param, url, function (datas) {
+
+                if (datas.code == -1) {
+                    layer.open({
+                        content: datas.msg,
+                        skin: 'msg',
+                        time: 2 //2秒后自动关闭
+                    });
+
+                    return false;
+                }
+
+                var data = datas.data;
+
+                var goods = {
+                    aisle_num: data.aisle_num,
+                    img: data.goods_img,
+                    name: data.goods_name,
+                    price: data.goods_price,
+                    inventory: data.inventory,
+                    num: 1
+                };
+
+                if (goodsList.length) {
+                    for (var i = 0; i < goodsList.length; i++) {
+                        if (goodsList[i].aisle_num != goods.aisle_num) {
+                            if ((i + 1) == goodsList.length) {
+                                goodsList.push(goods);
+                                break;
+                            } else {
+                                continue;
+                            }
+                        } else {
+                            goodsList[i].num = goodsList[i].num + 1;
+                            break;
+                        }
+                    }
+                } else {
+                    goodsList.push(goods);
+                }
+
+                $("#list").empty();
+
+                for (var i = 0; i < goodsList.length; i++) {
+                    var text = '<div class="list_box flex border-t pd-15" data-num="' +
+                        goodsList[i].aisle_num +
+                        '">' +
+                        '<div class="wd-25">' +
+                        '<img src="' + goodsList[i].img + '" class="wd-100">' +
+                        '</div>' +
+                        '<div class="wd-50 goodsMessage">' +
+                        '<div>' + goodsList[i].name + '</div>' +
+                        '<div style="padding:15px;font-size:12px;color:#ccc">库存：' + goodsList[i]
+                        .inventory + '</div>' +
+                        '<div class="col_yellow">￥<b>' + goodsList[i].price + '</b></div>' +
+                        '</div>' +
+                        '<div class="wd-25 box">' +
+                        '<div class="NumBox flex radius5 box">' +
+                        '<div class="reduce wd-33">-</div>' +
+                        '<div class="input wd-33">' +
+                        '<input type="number" readonly value="' + goodsList[i].num + '" />' +
+                        '</div>' +
+                        '<div class="plus wd-33" data-max=' + goodsList[i].inventory +
+                        '>+</div>' +
+                        '</div>' +
+                        '</div>' +
+                        '</div>';
+                    $("#list").append(text);
+
+                }
+
+                count();
+
+            }, function (error) {
+                layer.open({
+                    content: error,
+                    skin: 'msg',
+                    time: 2 //2秒后自动关闭
+                });
+            });
+
+
+
+        });
+
+        $("#list").on("click", ".plus", function () {
+
+            var numDom = $(this).siblings(".input").children();
+            var num = numDom.val();
+
+            if ((parseInt(num) + 1) <= $(this).data("max")) {
+                num = parseInt(num) + 1;
+                numDom.val(num);
+
+                count();
+            }
+
+        });
+
+        $("#list").on("click", ".reduce", function () {
+
+            var _this = $(this);
+            var numDom = _this.siblings(".input").children();
+            var num = numDom.val();
+
+            num = parseInt(num) - 1;
+
+            if (num >= 1) {
+                numDom.val(num);
+                count();
+            } else {
+                layer.open({
+                    content: '确认删除该商品？',
+                    btn: ['确认', '取消'],
+                    yes: function (index) {
+                        _this.parent().parent().parent().remove();
+                        layer.open({
+                            content: '已移除该商品',
+                            skin: 'msg',
+                            time: 2 //2秒后自动关闭
+                        });
+                        count();
+                    }
+                });
+            }
+
+        });
+
+        $(".pay_btn").on("click", function () {
+            $(".payBox").slideToggle();
+        });
+
+        $(".cancel").on("click", function () {
+            $(".payBox").slideToggle();
+        });
+
+        //微信支付
+        var off = 0
+        $(".wxpay").on("click", function () {
+            if (off) return false
+            payWay(1)
+        })
+
+        //支付宝支付
+        $(".alipay").on("click", function () {
+            if (off) return false
+            payWay(2)
+        })
+
+        function payWay(type) {
+            off = 1
+            var order_date = [];
+            $(".pay_btn").attr('disabled', true)
+
+            $(".list_box").each(function () {
+                var aisle_num = $(this).data("num");
+                var goods_num = $(this).find("input").val();
+
+                order_date.push({
+                    aisle_num: aisle_num,
+                    goods_num: goods_num
+                });
+            });
+
+            var param = {
+                api_name: "pay",
+                macno: getUrlParam('macno'),
+                type: type, //1：微信 2：支付宝
+                order_date: order_date
+            }
+            var url = "MylGoods/api";
+
+            // console.log(JSON.stringify(param))
+
+            ajaxPost(param, url, function (datas) {
+                off = 0
+                if (datas.code == -1) {
+                    layer.open({
+                        content: datas.msg,
+                        skin: 'msg',
+                        time: 2 //2秒后自动关闭
+                    });
+                } else {
+                    // alert(JSON.stringify(datas))
+                    if (type == 1) {
+                        jsApiParameters = datas.data
+                        callpay()
+                        $(".pay_btn").attr('disabled', false)
+                    } else {
+                        // $("body").append(datas.data.data)
+                        // console.log(JSON.stringify(datas.data))
+                        // $(".pay_btn").attr('disabled', false)
+
+                        var form = datas.data;
+                        console.log(form);
+                        $("#alipayForm").append(form);
+                        console.log($("#alipayForm"))
+                        var queryParam = '';
+                        Array.prototype.slice.call(document.querySelectorAll("input[type=hidden]")).forEach(
+                            function (ele) {
+                                queryParam += '&' + ele.name + "=" + encodeURIComponent(ele.value);
+                            });
+                        var url = document.getElementsByName("alipaysubmit")[0].action + '' +
+                            queryParam;
+                        _AP.pay(url);
+                    }
+
+                }
+
+            }, function (error) {
+                $(".pay_btn").attr('disabled', false)
+                layer.open({
+                    content: error,
+                    skin: 'msg',
+                    time: 2 //2秒后自动关闭
+                });
+            });
+        }
+
+        //计算价格
+        function count() {
+
+            var price, num;
+            var count = 0;
+            var targ = $("#foot .pay_message span b");
+            var list = $("#list").children();
+            var length = list.length;
+
+            for (var i = 0; i < length; i++) {
+                price = list.eq(i).find(".col_yellow b").html();
+                num = list.eq(i).find("input").val();
+                count += price * num;
+            }
+
+            targ.html(count.toFixed(2))
+
+        }
+
+        //调用微信JS api 支付
+        function jsApiCall() {
+            WeixinJSBridge.invoke(
+                'getBrandWCPayRequest',
+                jsApiParameters, // 提交的支付信息
+                function (res) {
+                    WeixinJSBridge.log(res.err_msg);
+                    if (res.err_msg == 'get_brand_wcpay_request:ok') {
+                        dlctipbox.show('支付成功');
+                        setTimeout(function () {
+                            WeixinJSBridge.call('closeWindow');
+                        }, 1000)
+                    } else {
+                        off = 0;
+                        dlctipbox.show("取消支付")
+                    }
+                    // alert(res.err_msg)
+                }
+            );
+        }
+
+        //调用微信 支付
+        function callpay() {
+            if (typeof WeixinJSBridge == "undefined") {
+                if (document.addEventListener) {
+                    document.addEventListener('WeixinJSBridgeReady', jsApiCall, false);
+
+                } else if (document.attachEvent) {
+                    document.attachEvent('WeixinJSBridgeReady', jsApiCall);
+                    document.attachEvent('onWeixinJSBridgeReady', jsApiCall);
+                }
+            } else {
+                jsApiCall();
+            }
+        }
+
+    });
+</script>
+
+</html>

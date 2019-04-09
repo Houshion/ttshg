@@ -1,0 +1,103 @@
+<html>
+    <head>
+        <title>合作加盟</title>
+        <meta charset="UTF-8">
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+        <meta name="viewport" content="width=device-width,target-densitydpi=high-dpi,initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+        <meta name="format-detection" content="telephone=no, email=no">
+        <meta name="apple-mobile-web-app-capable" content="yes" />
+        <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+        <meta http-equiv="Cache-Control" content="no-cache" />
+        <link rel="stylesheet" href="../css/o_base.css">
+        <link rel="stylesheet" href="../css/o_style.css">
+        <link rel="stylesheet" href="../css/layui.css">
+        <link rel="stylesheet" href="../css/layer.css">
+    </head>
+    <body>
+        <div id="alliance" class="mg-b-50">
+            <div class="border-t form flex pd-10">
+                <div class="label wd-20 box ta-left">
+                    <label for="name">联系人</label>
+                </div>
+                <div class="input wd-80">
+                    <input type="text" id="name" placeholder="请输入联系人姓名">
+                </div>
+            </div>
+            <div class="border-t form flex pd-10">
+                <div class="label wd-20 box ta-left">
+                    <label for="phone">联系电话</label>
+                </div>
+                <div class="input wd-80">
+                    <input type="text" id="phone" placeholder="请输入联系电话" maxlength="11">
+                </div>
+            </div>
+            <div class="border-t form flex pd-10">
+                <div class="label wd-20 box ta-left">
+                    <label for="c_phone">厂家电话</label>
+                </div>
+                <div class="input wd-80">
+                    <input type="text" id="c_phone" placeholder="请输入厂家电话" maxlength="11">
+                </div>
+            </div>
+        </div>
+        <div class="mg-auto wd-80 btn ta-center pd-15 radius5 font16 submit">提交</div>
+    </body>
+    <script src="../js/o_base.js"></script>
+    <script src="../js/jquery-1.11.1.min.js"></script>
+    <script src="../js/layui.all.js"></script>
+    <script src="../js/layer.js"></script>
+    <script>
+        $(function () {
+
+            
+
+            $(".submit").on("click", function () {
+
+                var name = $("#name").val();
+                var phone = $("#phone").val();
+                var c_phone = $("#c_phone").val();
+                if(!isPhone(phone)){
+                    layer.open({
+                        content: "联系电话号码有误",
+                        skin: 'msg',
+                        time: 2 //2秒后自动关闭
+                    });
+                }else if(!isPhone(c_phone)){
+                    layer.open({
+                        content: "厂家电话号码有误",
+                        skin: 'msg',
+                        time: 2 //2秒后自动关闭
+                    });
+                }else{
+                    submit(name,phone,c_phone);
+                }
+            });
+
+            function submit(link_person,link_phone,maker_phone){
+                
+                var param = {
+                    api_name:"addCooperation",
+                    link_person: link_person,
+                    link_phone: link_phone,
+                    maker_phone: maker_phone
+                }
+                var url = "user/api";
+
+                ajaxPost(param,url,function(data) {
+                    layer.open({
+                        content: data.msg,
+                        skin: 'msg',
+                        time: 2 //2秒后自动关闭
+                    });
+                },function (error) {
+                    layer.open({
+                        content: error,
+                        skin: 'msg',
+                        time: 2 //2秒后自动关闭
+                    });
+                });
+            }
+
+        });
+    </script>
+</html>

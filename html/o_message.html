@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+
+    <head>
+        <title></title>
+        <meta charset="UTF-8">
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+        <meta name="viewport" content="width=device-width,target-densitydpi=high-dpi,initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+        <meta name="format-detection" content="telephone=no, email=no">
+        <meta name="apple-mobile-web-app-capable" content="yes" />
+        <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+        <meta http-equiv="Cache-Control" content="no-cache" />
+        <link rel="stylesheet" href="../css/o_base.css">
+        <link rel="stylesheet" href="../css/o_style.css">
+        <link rel="stylesheet" href="../css/layui.css">
+        <link rel="stylesheet" href="../css/layer.css">
+    </head>
+    <body>
+        <div id="message" class="pd-15">
+            <!-- <div class="list border radius5 pd-15 mg-b-15">
+                <div class="flex flexBetween">
+                    <div class="left">
+                        <img src="../img/i_sound.png" class="wd-20">
+                        <span class="font16">设备异常消息</span>
+                    </div>
+                    <div class="box col_gray">2018-03-27 00:00:00</div>
+                </div>
+                <div class="pd-t-15 pd-b-15">
+                    <div class="flex">
+                        <label class="col_gray pd-r-15">设备编号</label>
+                        <span class="box">123456</span>
+                    </div>
+                    <div class="flex">
+                        <label class="col_gray pd-r-15">设备地址</label>
+                        <span class="box">东莞市高盛科技大厦303</span>
+                    </div>
+                    <div class="flex">
+                        <label class="col_gray pd-r-15">设备在线</label>
+                        <span class="box">是</span>
+                    </div>
+                </div>
+                <div class="font16 col_yellow">
+                    设备出现异常，请及时处理！
+                </div>
+            </div>
+            <div class="list border radius5 pd-15 mg-b-15">
+                <div class="flex flexBetween">
+                    <div class="left">
+                        <img src="../img/i_sound.png" class="wd-20">
+                        <span class="font16">设备异常消息</span>
+                    </div>
+                    <div class="box col_gray">2018-03-27 00:00:00</div>
+                </div>
+                <div class="pd-t-15 pd-b-15">
+                    <div class="flex">
+                        <label class="col_gray pd-r-15">设备编号</label>
+                        <span class="box">123456</span>
+                    </div>
+                    <div class="flex">
+                        <label class="col_gray pd-r-15">设备地址</label>
+                        <span class="box">东莞市高盛科技大厦303</span>
+                    </div>
+                    <div class="flex">
+                        <label class="col_gray pd-r-15">设备在线</label>
+                        <span class="box">是</span>
+                    </div>
+                </div>
+                <div class="font16 col_yellow">
+                    设备出现异常，请及时处理！
+                </div>
+            </div>
+            <div class="list border radius5 pd-15 mg-b-15">
+                <div class="flex flexBetween">
+                    <div class="left">
+                        <img src="../img/i_sound.png" class="wd-20">
+                        <span class="font16">设备异常消息</span>
+                    </div>
+                    <div class="box col_gray">2018-03-27 00:00:00</div>
+                </div>
+                <div class="pd-t-15 pd-b-15">
+                    <div class="flex">
+                        <label class="col_gray pd-r-15">设备编号</label>
+                        <span class="box">123456</span>
+                    </div>
+                    <div class="flex">
+                        <label class="col_gray pd-r-15">设备地址</label>
+                        <span class="box">东莞市高盛科技大厦303</span>
+                    </div>
+                    <div class="flex">
+                        <label class="col_gray pd-r-15">设备在线</label>
+                        <span class="box">是</span>
+                    </div>
+                </div>
+                <div class="font16 col_yellow">
+                    设备出现异常，请及时处理！
+                </div>
+            </div> -->
+        </div>
+    </body>
+    <script src="../js/jquery-1.11.1.min.js"></script>
+    <script src="../js/layui.all.js"></script>
+    <script src="../js/layer.js"></script>
+    <script src="../js/o_base.js"></script>
+    <script>
+        $(function () {
+            
+            getMessage();
+
+            function getMessage(){
+
+                var paramGet = getParam();
+
+                console.log(paramGet)
+
+                if(paramGet.length > 1){
+                    var param = {api_name:"getDeviceIfno",macno: paramGet.macno}
+                }else{
+                    var param = {api_name:"deviceList"}
+                }
+                var url = "Device/api";                
+
+                ajaxPost(param,url,function(datas) {
+
+                    var data = datas.data;
+                    var str = '';
+
+                    if(data.length == 0){
+                        $("#message").prepend("<div class='ta-center'>..暂无数据..</div>");
+                        return false;
+                    }
+
+                    if(datas.code == -1){
+                        layer.open({
+                            content: datas.msg,
+                            skin: 'msg',
+                            time: 2 //2秒后自动关闭
+                        });
+                        setTimeout(() => {
+                            back()
+                        }, 2000);
+                        return false;
+                    }
+
+                    for(var i = 0;i< data.length; i++){
+
+                        var message = (data[i].type == 1)?"异常消息":"补货通知";
+                        var status = (data[i].status == 1)?"在线":"未在线";
+
+                        str += '<div class="list border radius5 pd-15 mg-b-15">'+
+                                    '<div class="flex flexBetween">'+
+                                        '<div class="left">'+
+                                            '<img src="../img/i_sound.png" class="wd-20">'+
+                                            '<span class="font16">'+message+'</span>'+
+                                        '</div>'+
+                                        '<div class="box col_gray">'+data[i].ctime+'</div>'+
+                                    '</div>'+
+                                    '<div class="pd-t-15 pd-b-15">'+
+                                        '<div class="flex">'+
+                                            '<label class="col_gray pd-r-15">设备编号</label>'+
+                                            '<span class="box">'+data[i].macno+'</span>'+
+                                        '</div>'+
+                                        '<div class="flex">'+
+                                            '<label class="col_gray pd-r-15">设备地址</label>'+
+                                            '<span class="box">'+data[i].address+'</span>'+
+                                        '</div>'+
+                                        '<div class="flex">'+
+                                            '<label class="col_gray pd-r-15">设备在线</label>'+
+                                            '<span class="box">'+status+'</span>'+
+                                        '</div>'+
+                                    '</div>'+
+                                    '<div class="font16 col_yellow">'+data[i].memo+'</div>'+
+                                '</div>';
+                        console.log(str);
+                    }
+
+                    
+                    
+                    $("#message").append(str)
+
+                },function (error) {
+                    layer.open({
+                        content: error,
+                        skin: 'msg',
+                        time: 2 //2秒后自动关闭
+                    });
+                });
+            }
+
+        })
+    </script>
+</html>

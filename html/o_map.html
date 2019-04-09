@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>地图导航</title>
+    <meta charset="UTF-8">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="viewport" content="width=device-width,target-densitydpi=high-dpi,initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <meta name="format-detection" content="telephone=no, email=no">
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+    <meta http-equiv="Cache-Control" content="no-cache" />
+    <link rel="stylesheet" href="../css/o_base.css">
+    <link rel="stylesheet" href="../css/o_style.css">
+    <link rel="stylesheet" href="../css/layui.css">
+    <link rel="stylesheet" href="../css/layer.css">
+    <style>
+        *{margin: 0;padding: 0;}
+            html,body{width: 100%;height: 100%;overflow: hidden;}
+            #container{
+                height: calc(100% + 20px);
+            }
+            /*#container>div div:nth-child(2){
+                display: none;
+            }
+            #container>div div:nth-child(3){
+                display: none;
+            }*/
+            .smnoprint{display: none;}
+        </style>
+</head>
+
+<body>
+    <div id="container"></div>
+</body>
+<script src="../js/o_base.js"></script>
+<script src="../js/jquery-1.11.1.min.js"></script>
+<script src="../js/layui.all.js"></script>
+<script src="../js/layer.js"></script>
+<script src="http://res.wx.qq.com/open/js/jweixin-1.2.0.js"></script>
+<script src="http://map.qq.com/api/js?v=2.exp&key=WXocean"></script>
+<script type="text/javascript" src="https://3gimg.qq.com/lightmap/components/geolocation/geolocation.min.js"></script>
+<script>
+    var geolocation = new qq.maps.Geolocation("N6RBZ-AJN35-AACI2-Q2ICF-HYV6O-JRBBZ", "myapp");
+
+    var positionNum = 0;
+    var options = {
+        timeout: 10000
+    };
+
+    var centerlat, centerlng;
+
+    function getLocations() {
+
+
+    }
+
+    function showPosition(position) {
+        positionNum++;
+        position;
+        lat = position.lat;
+        lng = position.lng;
+        console.log('具体地址：' + position.addr + '经度：' + lat + '纬度' + lng);
+        var center = new qq.maps.LatLng(lat, lng);
+
+
+        var map = new qq.maps.Map(document.getElementById('container'), {
+            center: center,
+            zoom: 13,
+            draggable: true, //手势控制, 用来设置地图是否能够鼠标拖拽，默认值为“可以”；
+            scrollwheel: false, //用来配置地图是否能够通过鼠标滚轮操作进行放大，默认值为“可以”；
+            disableDoubleClickZoom: false // 用来配置地图是否可以通过鼠标双击进行放大，默认值为“可以”。
+        });
+
+
+        //创建marker
+        var marker = new qq.maps.Marker({
+            position: center,
+            map: map
+        });
+
+        centerlat = lat;
+        centerlng = lng;
+
+        anchors(map)
+
+    }
+
+    function anchors(map) {
+
+        var param = {
+            api_name: "deviceList",
+            lat: centerlat,
+            lng: centerlng
+        }
+
+        var locations;
+
+        $.ajax({
+            type: "POST",
+            url: "http://tzshg.app.xiaozhuschool.com/Wxsite/AddGoods/api", // ajax请求路径
+            dataType: "JSON",
+            data: param,
+            async: false,
+            success: function (data) {
+                locations = data.data;
+            },
+            error: function (errorThrown) {
+                layer.open({
+                    content: "数据处理出错，请及时联系开发人员",
+                    skin: 'msg',
+                    time: 2 //2秒后自动关闭
+                });
+            }
+        })
+
+        //自定义标注图标
+        var anchor = new qq.maps.Point(55, 55),
+            size = new qq.maps.Size(110, 110),
+            origin = new qq.maps.Point(0, 0);
+        markerIcon = new qq.maps.MarkerImage(
+            "../img/position.png",
+            size,
+            origin,
+            anchor
+        );
+
+
+        var res = [];
+
+        for (var j in locations) {
+            res.push({
+                'lng': locations[j].lng,
+                'lat': locations[j].lat,
+                'name': locations[j].title
+            })
+        }
+
+        console.log(JSON.stringify(res))
+
+        for (var i in res) {
+            var logo1 = new qq.maps.LatLng(res[i].lat, res[i].lng);
+            //创建marker
+            var logo = new qq.maps.Marker({
+                position: logo1,
+                map: map
+            });
+            //自定义标注图标
+            var anchor = new qq.maps.Point(48, 55.5),
+                size = new qq.maps.Size(96, 101),
+                origin = new qq.maps.Point(0, 0);
+            markerIcon = new qq.maps.MarkerImage(
+                "../img/position.png",
+                size,
+                origin,
+                anchor
+            );
+            logo.setIcon(markerIcon);
+
+            //设置属性
+            logo.name = res[i].name;
+            console.log(logo.name)
+
+            //获取标记的点击事件
+            qq.maps.event.addListener(logo, 'click', function (e) {
+                console.log(this.name) //获取属性
+                location.href = "http://apis.map.qq.com/tools/routeplan/eword=" + res[i].name + "&epointx=" +
+                    res[i].lng + "&epointy=" + res[i].lat +
+                    "?referer=myapp&key=4LYBZ-CHBRG-TIMQ3-I3N32-2LJ4K-FZBTY"
+            });
+
+
+        }
+    }
+
+    function showErr() {
+        positionNum++;
+        console.log('定位失败！');
+    };
+    geolocation.getLocation(showPosition, showErr, options);
+</script>
+
+</html>

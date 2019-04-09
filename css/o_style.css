@@ -1,0 +1,381 @@
+body {
+    background: #efeff4
+}
+
+img {
+    width: 100%
+}
+
+h3 {
+    margin: 0
+}
+
+.bcol_white {
+    background: #ffffff
+}
+
+.col_gray {
+    color: #a3a3a3
+}
+
+.col_yellow {
+    color: #fdbe63
+}
+
+.btn {
+    background: #fdbe63;
+    color: #ffffff;
+}
+
+.inputImg {
+    opacity: 0;
+    width: 100px;
+    height: 100px;
+    position: absolute;
+    margin-top: -100px
+}
+
+.UpImage img {
+    width: 100px;
+    height: 100px;
+    margin-right: 10px
+}
+
+.mask {
+    position: fixed;
+    top: 0;
+    left: 0;
+    background: dimgrey;
+    opacity: 0.9;
+    width: 100%;
+    height: 100%;
+}
+
+#title,
+#main,
+#list,
+#foot,
+#feedback,
+#content,
+#alliance {
+    background: #ffffff
+}
+
+/****************** 选择商品部分样式 *****************/
+
+#main .search {
+    width: 200px;
+    height: 35px;
+    border: 1px solid #fdbe63;
+}
+
+#main .search .input {
+    border: none;
+    height: 100%
+}
+
+#main .search .button {
+    height: 100%;
+    line-height: 35px;
+}
+
+#main .i_his {
+    width: 16px
+}
+
+#list .list_box .goodsMessage div {
+    padding: 0 15px
+}
+
+#list .NumBox {
+    border: #fdbe63 1px solid;
+    height: 30px;
+}
+
+#list .NumBox .reduce,
+#list .NumBox .plus {
+    text-align: center;
+    line-height: 30px
+}
+
+#list .NumBox .input {
+    border-left: 1px solid #fdbe63;
+    border-right: 1px solid #fdbe63;
+}
+
+#list .NumBox .input input {
+    border: none;
+    width: 100%;
+    height: 100%;
+    padding: 5px;
+
+}
+
+#foot {
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+    height: 50px;
+}
+
+#foot .pay_btn,
+#foot .pay_message {
+    line-height: 50px;
+}
+
+/************************* 意见反馈部分样式 *********************/
+#feedback .feedback {
+    width: 100%;
+    border: none;
+}
+
+#feedback .addImg {
+    width: 50px;
+    height: 50px;
+    line-height: 50px;
+    text-align: center;
+    font-size: 60px;
+    padding: 15px;
+    border: dashed 2px #e6e6e6;
+    color: #e6e6e6;
+}
+
+#content input {
+    width: 100%;
+    border: none;
+}
+
+/************************* 合作加盟部分样式 *********************/
+#alliance .input input {
+    border: none;
+    width: 100%;
+    padding: 10px
+}
+
+/************************* 绑定手机部分样式 *********************/
+#titleLogo {
+    height: 300px;
+}
+
+#mainBinding .input input {
+    border: none;
+    height: 25px
+}
+
+#mainBinding .bd_btn {
+    height: 50px;
+    border: none;
+    font-size: 18px
+}
+
+.replenishmentMessage,
+.replenishmentEquipment,
+.waresList,
+.replenishment,
+#appendTitle .title,
+#append .main,
+#select .selectTitle,
+#select .selectMain {
+    background: #ffffff;
+}
+
+/************************* 补货相关部分样式 *********************/
+.replenishment {
+    padding: 20px;
+    border-radius: 5px;
+    margin-bottom: 15px
+}
+
+.replenishment img {
+    width: 25px;
+    height: 25px;
+}
+
+.replenishmentEquipment img,
+#replenishment .title img,
+#replenishment .list img,
+#appendTitle .title img {
+    width: 18px
+}
+
+.replenishment .type {
+    line-height: 25px;
+}
+
+.replenishment img.right,
+.replenishmentEquipment img.right,
+#append .main .select img {
+    width: 10px;
+    height: 17px;
+}
+
+#replenishment .foot {
+    position: fixed;
+    height: 50px;
+    width: 100%;
+    bottom: 0;
+}
+
+#replenishment .foot .plus {
+    background: #fdbe63;
+    color: #ffffff;
+}
+
+#replenishment .foot .add {
+    color: #fdbe63;
+    background: #ffffff;
+}
+
+#appendTitle .input input {
+    width: 50% !important;
+}
+
+#appendTitle #list .list {
+    line-height: 32px;
+}
+
+#appendTitle .confirm,
+#append .add_btn,
+#select .selectBtn .add_btn {
+    height: 50px;
+    border: none;
+    font-size: 18px
+}
+
+#append .main .select {
+    text-align: right
+}
+
+#append .main .input input,
+#select .selectTitle .searchBar input {
+    border: none
+}
+
+#append .main .image img {
+    width: 100px;
+    height: 100px
+}
+
+#append .main .image .add {
+    width: 98px;
+    height: 98px;
+    font-size: 60px;
+    border: 1px #e6e6e6 dashed;
+    color: #efeff4
+}
+
+#append .mask {
+    position: fixed;
+    top: 0;
+    left: 0;
+    background: dimgrey;
+    opacity: 0.9;
+    width: 100%;
+    height: 100%;
+}
+
+#append .mask .list {
+    width: 50%;
+    height: 50%;
+    margin-top: 50%;
+    margin-left: 25%;
+}
+
+#append .mask .list div,
+#append .mask .list h2 {
+    text-align: center;
+    background: #ffffff;
+    padding: 15px;
+}
+
+#append .mask {
+    display: none
+}
+
+/***************************** 选择商品部分样式 ***************************/
+#select .selectTitle .searchBar input {
+    padding: 10px 0;
+    background: #efeff4;
+    border-radius: 5px;
+    text-indent: 3em;
+}
+
+#select .selectTitle .searchBar:before {
+    content: "";
+    width: 30px;
+    height: 30px;
+    position: absolute;
+    margin-left: 20px;
+    margin-top: 10px;
+    line-height: 36px;
+    background: url("../img/i_search.png") no-repeat;
+    background-size: 65%
+}
+
+#select .list .content div:nth-child(2) {
+    height: 100px;
+    line-height: 100px;
+}
+
+.payWay {
+    position: fixed;
+    bottom: 0;
+}
+
+/*********************** 异常系列样式 **********************/
+#abnormal .list,
+#abnormalAdd .content,
+#abnormalDetail .list,
+#abnormalDetail .flexBetween {
+    background: #ffffff;
+}
+
+#abnormal .list .title {
+    justify-content: space-between;
+}
+
+#abnormal .list .content,
+#abnormalDetail .list .content {
+    line-height: 24px
+}
+
+#abnormalAdd .submit,
+#abnormal .submit {
+    height: 50px;
+    border: none;
+    font-size: 18px
+}
+
+#abnormalAdd #content {
+    border: none;
+}
+
+#abnormalAdd .content .plus {
+    width: 98px;
+    height: 98px;
+    font-size: 60px;
+    border: 1px #e6e6e6 dashed;
+    color: #efeff4
+}
+
+#abnormalDetail .list img {
+    width: 100px;
+    height: 100px;
+    margin-top: 20px
+}
+
+/************************* 消息部分样式 ****************************/
+#message .list {
+    background: #ffffff;
+}
+
+/************************* 宣传/新闻部分样式 ****************************/
+#propaganda .propaganda,
+#news .newsList,
+#detail .detailList {
+    background: #ffffff;
+}
+
+#news .newsList img {
+    height: 100%
+}

@@ -1,0 +1,87 @@
+<html>
+    <head>
+        <title>意见反馈</title>
+        <meta charset="UTF-8">
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+        <meta name="viewport" content="width=device-width,target-densitydpi=high-dpi,initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+        <meta name="format-detection" content="telephone=no, email=no">
+        <meta name="apple-mobile-web-app-capable" content="yes" />
+        <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+        <meta http-equiv="Cache-Control" content="no-cache" />
+        <link rel="stylesheet" href="../css/o_base.css">
+        <link rel="stylesheet" href="../css/o_style.css">
+        <link rel="stylesheet" href="../css/layui.css">
+        <link rel="stylesheet" href="../css/layer.css">
+    </head>
+    <body>
+        <form id="repair_form" enctype="multipart/form-data" method="POST">
+            <h3 class="pd-15">反馈内容</h3>
+            <div id="feedback" class="pd-15">
+                <textarea name="content" class="feedback" cols="30" rows="6" placeholder="请输入您反馈的问题，我们会尽快回复您！"></textarea>
+                <div class="flex flexWrap UpImage" id="UpImage">
+                    <div class="wd-30 box">
+                        <img class="add" src="../img/plus.png" alt="">
+                        <input type="file" name="imgs1"  class="file inputImg" accept="image/*" capture="camera" multiple onchange="uploadImg(this)"/>
+                    </div>
+                </div>
+            </div>
+            <h3 class="pd-15">联系方式</h3>
+            <div id="content" class="mg-b-50">
+                <input name="mobile" class="pd-15" type="text" placeholder="留下邮箱或手机号码，方便我们联系您">
+            </div>
+            <div class="mg-auto wd-80 btn ta-center pd-15 radius5 font16 submit">提交</div>
+            <input type="hidden" name="api_name" value="addFeedback">   
+        </form>
+    </body>
+    <script src="../js/o_base.js"></script>
+    <script src="../js/jquery-1.11.1.min.js"></script>
+    <script src="../js/layui.all.js"></script>
+    <script src="../js/layer.js"></script>
+    <script src="../js/jquery.form.js"></script>
+    <script src="../js/dlc.js"></script>
+    <script>
+        $(function () {
+
+            $(".submit").on("click", function () {
+
+                var content = $(".feedback").val();
+                var mobile = $("#content input").val();
+                var imgs = $(".UpImage").children("img").attr("src");//图片路径，多张用逗号（，）隔开
+                if(isPhone(mobile) || isEmail(mobile)){
+                    $('#repair_form').ajaxSubmit({
+                        url:'http://tzshg.app.xiaozhuschool.com/Wxsite/user/api',
+                        type : 'POST',
+                        dataType:  'json',
+                        success:function(res){
+                            layer.open({
+                                content: res.msg,
+                                skin: 'msg',
+                                time: 2 //2秒后自动关闭
+                            });
+                            setTimeout(() => {
+                                back();
+                            },2000);
+                        },
+                        error: function(err){
+                            layer.open({
+                                content: error,
+                                skin: 'msg',
+                                time: 2 //2秒后自动关闭
+                            });
+                        }
+                    })
+                }else{
+                    layer.open({
+                        content: "电话号码或Email填写有误",
+                        skin: 'msg',
+                        time: 2 //2秒后自动关闭
+                    });
+                }
+
+                
+
+            });
+
+        });
+    </script>
+</html>

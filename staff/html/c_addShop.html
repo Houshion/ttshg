@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="viewport" content="width=device-width,target-densitydpi=high-dpi,initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <meta name="format-detection" content="telephone=no, email=no">
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+    <meta http-equiv="Cache-Control" content="no-cache" />
+    <!--设置存缓-->
+    <!-- css -->
+    <link rel="stylesheet" href="../css/reset.css">
+    <link rel="stylesheet" href="../css/swiper.min.css">
+    <title>增加商品</title>
+    <!-- 设置rem -->
+    <script type="text/javascript" src="../js/adaptive.js"></script>
+    <script>
+    window['adaptive'].desinWidth = 750;
+    window['adaptive'].baseFont = 28;
+    window['adaptive'].init();
+    </script>
+    <style>
+    .top div {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        height: 1.0rem;
+        background: #fff;
+        padding: 0 0.20rem;
+        border-bottom: 1px solid #eee
+    }
+       .col9{color: #999;}
+        #ku_cun{display: none;}
+        .lh80{line-height: .8rem;}
+        .top .aisle{display: none;}
+        #aisel_box{z-index:2;background: #fff;text-align: center;width: 70%;position: fixed;left: 50%;top: 150%;margin-left: -35%;margin-top: -2.4rem;transition: 300ms;}
+        .aisel_list{max-height: 4rem;overflow-y: scroll;}
+        .aisel_list li{border-top: 1px solid #dadada;box-sizing: border-box;height:.8rem;line-height: .8rem;}
+        .aisel_list li:active{background: #fff9f5;}
+    </style>
+</head>
+
+<body class="bc-gray">
+    <div class="top">
+        <div class="shopName">
+            <span>商品名称</span>
+            <div style="padding: 0;">
+                <span class="font28" id="goods_name"></span>
+                <img src="../img/right.png" style="width: 0.18rem;margin-left: .2rem;">
+            </div>
+        </div>
+        <div class="aisle">
+            <span>请选择通道号</span>
+            <div style="padding: 0;">
+                <span class="font28 col9" id="aisle_text"></span>
+                <img src="../img/right.png" style="width: 0.18rem;margin-left: .2rem;">
+            </div>
+        </div>
+        <!--<div id="ku_cun">-->
+            <!--<span>库存量</span>-->
+            <!--<input type="number"  class="tr c999" placeholder="请输入库存量" id="inventory">-->
+        <!--</div>-->
+    </div>
+    <div class="bc-fff margin-top-20" id="img_box">
+        <!--<div class="height8 paddlr20 border-bottom">商品展示图</div>-->
+        <!--<img src="../img/bg1.png" class="padd20" style="width: 2.0rem">-->
+    </div>
+    <div class="btn">确定</div>
+    <section class="font28" id="aisel_box">
+        <div class="lh80">请选择设备通道号</div>
+        <ul class="aisel_list"></ul>
+    </section>
+</body>
+</html>
+<script src="../js/jquery-1.8.3.min.js"></script>
+<script src="../js/dlc.js" type="text/javascript" charset="utf-8"></script>
+<script>
+    $(function(){
+        if(getUrlParam('device_goods_id')){
+            $(".btn").click(function(){
+                dlc_request('Wxsite/Lzjrevenue/api',{'api_name':'goods_edit','goods_id':getUrlParam('goods_id'),'device_goods_id':getUrlParam('device_goods_id')},function(res){
+                    console.log(res);
+                    if(res.code==1){
+                       setTimeout(function(){
+                           location.href = 'c_equipment.html?macno='+getUrlParam('macno');
+                       },1000);
+                    }
+                    dlctipbox.show(res.msg);
+                });
+            });
+        }else{
+            $('.aisle').css('display','flex');
+            $(".btn").click(function(){
+                var aisle_text = $('#aisle_text').text();
+                if(getUrlParam('goods_id')){
+                    console.log(getUrlParam('goods_id'));
+                    if(isNull(aisle_text)){
+                        dlctipbox.show('请选择通道');
+                    }else{
+                        dlc_request('Wxsite/XlEquipment/api',{'api_name':'setGoods','goods_id':getUrlParam('goods_id'),'aisle_num':aisle_text,'macno':getUrlParam('macno')},function(res){
+                            console.log(res);
+                            if(res.code==1){
+                                location.href = 'c_equipment.html?macno='+getUrlParam('macno');
+                            }
+                            dlctipbox.show(res.msg);
+                        });
+                    }
+                }else{
+                    dlctipbox.show('请添加商品');
+                }
+            });
+        }
+        dlctipbox.loading('请稍后...');
+        if(getUrlParam('goods_id')){
+            dlc_request('Wxsite/XlEquipment/api',{'api_name':'selectGoods','goods_id':getUrlParam('goods_id')},function(res){
+                console.log(res);
+                if(res.code==1){
+                    $('#img_box').html('<div class="height8 paddlr20 border-bottom">商品展示图</div>'+
+                            '<img src="'+res.data.img+'" class="padd20" style="width: 2.0rem">');
+                    $('#goods_name').text(res.data.title);
+                }else{
+                    dlctipbox.show(res.msg);
+                }
+            });
+        }
+        dlc_request('Wxsite/XlEquipment/api',{'api_name':'aisle','macno':getUrlParam('macno')},function(res){
+            console.log(res);
+            dlctipbox.clear();
+            if(res.code==1){
+                var res = res.data;
+                var str='';
+                for(var i in res){
+                    str+='<li data-id="'+res[i].aisle_id+'">'+res[i].aisle_num+'</li>';
+                }
+                $('.aisel_list').html(str);
+            }
+        });
+        $(".shopName").click(function () {
+            window.location.href='c_selsectAbnormal.html?macno='+getUrlParam('macno')+'&id='+getUrlParam('device_goods_id');
+        });
+        $('.aisle').click(function(){
+            showMask();
+           $('#aisel_box').css('top','50%');
+        });
+        $('body').on('click','.mask',function(){
+            clear();
+        });
+        function clear(){
+            $('#aisel_box').css('top','150%');
+            setTimeout(function(){
+                hideMask();
+            },300);
+        }
+        $('.aisel_list').on('click','li',function(){
+           $('#aisle_text').text($(this).text());
+            clear();
+        });
+    });
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="viewport" content="width=device-width,target-densitydpi=high-dpi,initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <meta name="format-detection" content="telephone=no, email=no">
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+    <meta http-equiv="Cache-Control" content="no-cache" />
+    <!--设置存缓-->
+    <!-- css -->
+    <link rel="stylesheet" href="../css/reset.css">
+    <link rel="stylesheet" href="../css/swiper.min.css">
+    <title>异常记录</title>
+    <!-- 设置rem -->
+    <script type="text/javascript" src="../js/adaptive.js"></script>
+    <script>
+    window['adaptive'].desinWidth = 750;
+    window['adaptive'].baseFont = 28;
+    window['adaptive'].init();
+    </script>
+    <style>
+        #list li + li{margin-top: .2rem;}
+    </style>
+</head>
+
+<body class="conTent bc-gray"> 
+    <ul class=" flex1" style="overflow-y: scroll;" id="list">
+        <li class="margin-top-20 bc-fff paddlr20">
+           <div class="height7 c999 border-bottom space_between">
+               <div><img src="../img/ren.png" style="width: 0.28rem"><span class="margin-left-20">陈跳跳</span></div>
+               <span>2017.10.7</span>
+           </div> 
+           <div class="paddtb20">这个异常就是未出货什么的东西</div>
+        </li>
+        <li class="margin-top-20 bc-fff paddlr20">
+           <div class="height7 c999 border-bottom space_between">
+               <div><img src="../img/ren.png" style="width: 0.28rem"><span class="margin-left-20">陈跳跳</span></div>
+               <span>2017.10.7</span>
+           </div> 
+           <div class="paddtb20">这个异常就是未出货什么的东西这个异常就是未出货什么的东西这个异常就是未出货什么的东西</div>
+        </li>
+    </ul>
+    <div class="btn">新增记录</div>
+</body>
+
+</html>
+<script src="../js/jquery-1.8.3.min.js"></script>
+<script src="../js/dlc.js" type="text/javascript" charset="utf-8"></script>
+<script>
+    $(function(){
+        dlctipbox.loading('加载中...');
+        dlc_request('/Wxsite/Lqsdevice/api',{'api_name':'unusual_record','macno':getUrlParam('macno'),'page':1,'pagesize':9999},function(res){
+            console.log(res);
+            dlctipbox.clear();
+            if(res.code == 1){
+                var res = res.data;
+                var str = '';
+                for(var i in res){
+                    str+='<li class="bc-fff paddlr20" data-id="'+res[i].device_unusual_id+'">'+
+                            '<div class="height7 c999 border-bottom space_between">'+
+                            '<div><img src="../img/ren.png" style="width: 0.28rem"><span class="margin-left-20">'+res[i].user_name+'</span></div>'+
+                    '<span>'+format(res[i].ctime,'Y-m-d')+'</span>'+
+                    '</div>'+
+                    '<div class="paddtb20">'+res[i].reason+'</div>'+
+                            '</li>';
+                }
+                str = str?str:emptyTip('暂无记录');
+                $('#list').html(str);
+            }else{
+                dlctipbox.show(res.msg);
+            }
+        });
+        $("#list").on('click','li',function(){
+            console.log($(this).data('id'));
+            window.location.href='c_abnormalDelites.html?id='+$(this).data('id');
+        });
+        $(".btn").click(function(){
+            window.location.href='c_addAbnormal.html?device_id='+getUrlParam('device_id');
+        })
+    });
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

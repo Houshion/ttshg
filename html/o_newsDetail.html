@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+
+    <head>
+        <title></title>
+        <meta charset="UTF-8">
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+        <meta name="viewport" content="width=device-width,target-densitydpi=high-dpi,initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+        <meta name="format-detection" content="telephone=no, email=no">
+        <meta name="apple-mobile-web-app-capable" content="yes" />
+        <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+        <meta http-equiv="Cache-Control" content="no-cache" />
+        <link rel="stylesheet" href="../css/o_base.css">
+        <link rel="stylesheet" href="../css/o_style.css">
+        <link rel="stylesheet" href="../css/layui.css">
+        <link rel="stylesheet" href="../css/layer.css">
+    </head>
+    <body>
+        <div id="detail" class="pd-15">
+        </div>
+    </body>
+    <script src="../js/o_base.js"></script>
+    <script src="../js/jquery-1.11.1.min.js"></script>
+    <script src="../js/layui.all.js"></script>
+    <script src="../js/layer.js"></script>
+    <script src="../js/Unix.js"></script>
+    <script>
+        $(function () {
+
+            getDetail();
+
+            function getDetail(){
+
+                var id = getParam()
+                var param = {api_name:"newsInfo",news_id: id.id};
+                var url = "News/api";
+
+                ajaxPost(param,url,function(data) {
+
+                    var time = date('Y-m-d H:i', data.data.ctime);
+                    var img = '';
+                    var url;
+
+                    for(var i=0; i<data.data.news_img.length; i++){
+                        img += '<img src="'+data.data.news_img[i]+'" alt="">'
+                    }
+
+                    (isNull(data.data.news_url)) ? url = "javascript:;" : url = data.data.news_url;
+                    var str = '<div class="detailList radius5 mg-15 data-newsId="'+data.data.news_id+'"><a href="'+url+'">'+img+
+                                    '<div class="pd-15">'+data.data.content+'</div>'+
+                                '</a></div>'
+                    $("#detail").append(str)
+                },function (error) {
+                    layer.open({
+                        content: error,
+                        skin: 'msg',
+                        time: 2 //2秒后自动关闭
+                    });
+                });
+            }
+        })
+    </script>
+</html>
